@@ -1,12 +1,4 @@
-﻿using Newtonsoft.Json;
-using SeleniumAdvanced.Enums;
-using SeleniumAdvanced.Helpers;
-using System.Collections.Generic;
-using System;
-using System.Runtime.InteropServices;
-using System.IO;
-
-namespace SeleniumAdvanced.Providers
+﻿namespace SeleniumAdvanced.Providers
 {
     public class UrlProvider
     {
