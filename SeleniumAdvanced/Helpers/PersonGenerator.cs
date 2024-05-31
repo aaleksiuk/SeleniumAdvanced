@@ -7,8 +7,8 @@ namespace SeleniumAdvanced.Helpers
     {
         public enum Gender
         {
-            Male = 0,
-            Female = 1
+            Male,
+            Female
         }
         private readonly Faker personGenerator;
 
@@ -22,8 +22,7 @@ namespace SeleniumAdvanced.Helpers
         public PersonGenerator()
         {
             personGenerator = new Faker();
-            var r = new Random();
-            var gender = (Gender)r.Next(Enum.GetNames(typeof(Gender)).Length);
+            var gender = RandomHelper.GetRandomEnum<Gender>();
 
             Title = gender == Gender.Male ? "Mr." : "Mrs.";
             FirstName = personGenerator.Name.FirstName(gender == Gender.Male ? Bogus.DataSets.Name.Gender.Male : Bogus.DataSets.Name.Gender.Female);

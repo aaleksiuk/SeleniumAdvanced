@@ -22,10 +22,6 @@ namespace SeleniumAdvanced.Helpers
             driver.Quit();
         }
 
-        //Typ generyczny T
-        //Uruchomić konstruktor klasy T
-        //Przekazać do niego drivera
-        //Uruchamiamy go za pomocą reflekcji
         public T GetPage<T>(Action<T> action) where T : class
         {
             var page = (T)Activator.CreateInstance(typeof(T), driver);
