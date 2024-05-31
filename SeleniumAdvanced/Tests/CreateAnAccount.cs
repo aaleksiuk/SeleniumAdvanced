@@ -17,7 +17,6 @@ namespace SeleniumAdvanced
         public void CreateAccount()
         {
             this.driver.Navigate().GoToUrl(UrlProvider.BaseUrl);
-            //var generator = new PersonGenerator();
 
             GetPage<MainPage>(x =>
             {
@@ -37,16 +36,17 @@ namespace SeleniumAdvanced
                 x.SetFirstName(person.FirstName);
                 x.SetLastName(person.LastName);
                 x.SetEmail(person.Mail);
-                x.SetPassword("12345");
-                x.SetBirthdate("04/05/1990");
+                x.SetPassword(person.Password);
+                x.SetBirthdate(person.BirthDate);
                 x.SetReceiveOffers(true);
                 x.SetDataPrivacy(true);
                 x.SetNewsletter(true);
                 x.SetTermsAndConditions(true);
                 //x.SetSubmit();
             });
-            GetPage<MainPage>(x => { 
-            })
+            GetPage<MainPage>(x =>
+            {
+            });
         }
     }
 }
