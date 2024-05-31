@@ -1,13 +1,6 @@
 ﻿using OpenQA.Selenium;
-using OpenQA.Selenium.Support.UI;
 using SeleniumAdvanced.Extensions;
-using SeleniumAdvanced.Helpers;
-using SeleniumExtras.WaitHelpers;
-using System;
 using System.Collections.Generic;
-using System.Reflection.Emit;
-using System.Web.UI.WebControls;
-using System.Xml.Linq;
 
 namespace SeleniumAdvanced.Pages
 {
@@ -26,7 +19,7 @@ namespace SeleniumAdvanced.Pages
         private IWebElement Submit => driver.WaitAndFind(By.CssSelector("button[data-link-action='save-customer']"));
         private IWebElement SuccessMessage => driver.WaitAndFind(By.Id("validator-message"));
 
-        public CreateAccountPage SetSocialTitle(string gender)
+        public void SetSocialTitle(string gender)
         {
             if (gender.Equals("Mr."))
             {
@@ -36,71 +29,60 @@ namespace SeleniumAdvanced.Pages
             {
                 SocialTitle[1].Click();
             }
-            return new CreateAccountPage(driver);
         }
-        public CreateAccountPage SetFirstName(string firstName)
+        public void SetFirstName(string firstName)
         {
             FirstName.SendKeys(firstName);
-            return new CreateAccountPage(driver);
         }
-        public CreateAccountPage SetLastName(string lastName)
+        public void SetLastName(string lastName)
         {
             LastName.SendKeys(lastName);
-            return new CreateAccountPage(driver);
         }
-        public CreateAccountPage SetEmail(string email)
+        public void SetEmail(string email)
         {
             Email.SendKeys(email);
-            return new CreateAccountPage(driver);
         }
-        public CreateAccountPage SetPassword(string password)
+        public void SetPassword(string password)
         {
             Password.SendKeys(password);
-            return new CreateAccountPage(driver);
         }
-        public CreateAccountPage SetBirthdate(string birthdate)
+        public void SetBirthdate(string birthdate)
         {
             Birthdate.SendKeys(birthdate);
-            return new CreateAccountPage(driver);
         }
 
-        public CreateAccountPage SetReceiveOffers(bool receiveOffers)
+        public void SetReceiveOffers(bool receiveOffers)
         {
             if (receiveOffers)
             {
                 ReceiveOffers.Click();
             }
-            return new CreateAccountPage(driver);
         }
-        public CreateAccountPage SetDataPrivacy(bool dataPrivacy)
+        public void SetDataPrivacy(bool dataPrivacy)
         {
             if (dataPrivacy)
             {
                 DataPrivacy.Click();
             }
-            return new CreateAccountPage(driver);
         }
-        public CreateAccountPage SetNewsletter(bool newsletter)
+        public void SetNewsletter(bool newsletter)
         {
             if (newsletter)
             {
                 Newsletter.Click();
             }
-            return new CreateAccountPage(driver);
         }
-        public CreateAccountPage SetTermsAndConditions(bool termsAndConditions)
+        public void SetTermsAndConditions(bool termsAndConditions)
         {
             if (termsAndConditions)
             {
                 TermsAndConditions.Click();
             }
-            return new CreateAccountPage(driver);
         }
-        public CreateAccountPage SetSubmit()
+        public void SetSubmit()
         {
             Submit.Click();
-            return new CreateAccountPage(driver);
         }
-        public string GetValidationMsg() => SuccessMessage.Text;
+
     }
 }

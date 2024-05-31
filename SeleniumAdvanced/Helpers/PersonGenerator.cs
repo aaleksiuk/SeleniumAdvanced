@@ -37,10 +37,5 @@ namespace SeleniumAdvanced.Helpers
         {
             return $"{FirstName.ToLower()}.{LastName.ToLower()}@somewhere.com";
         }
-
-        private Faker GetPersonGenerator()
-        {
-            return personGenerator;
-        }
     }
 }

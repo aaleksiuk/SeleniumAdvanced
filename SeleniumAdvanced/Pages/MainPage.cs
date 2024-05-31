@@ -6,11 +6,12 @@ namespace SeleniumAdvanced.Pages
     public class MainPage(IWebDriver driver)
     {
         private IWebElement SignInBtn => driver.WaitAndFind(By.CssSelector(".user-info"));
+        private IWebElement ViewCustomerAccountBtn => driver.WaitAndFind(By.CssSelector("span.hidden-sm-down"));
 
-        public MainPage SignIn()
+        public void SignIn()
         {
             SignInBtn.Click();
-            return new MainPage(driver);
         }
+        public string IsSignedIn() => ViewCustomerAccountBtn.Text;
     }
 }

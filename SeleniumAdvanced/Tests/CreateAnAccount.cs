@@ -1,7 +1,6 @@
 ﻿using SeleniumAdvanced.Helpers;
 using SeleniumAdvanced.Pages;
 using SeleniumAdvanced.Providers;
-using System;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -17,6 +16,7 @@ namespace SeleniumAdvanced
         public void CreateAccount()
         {
             this.driver.Navigate().GoToUrl(UrlProvider.BaseUrl);
+            var person = new PersonGenerator();
 
             GetPage<MainPage>(x =>
             {
@@ -30,8 +30,6 @@ namespace SeleniumAdvanced
 
             GetPage<CreateAccountPage>(x =>
             {
-                var person = new PersonGenerator();
-                
                 x.SetSocialTitle(person.Title);
                 x.SetFirstName(person.FirstName);
                 x.SetLastName(person.LastName);
@@ -42,10 +40,12 @@ namespace SeleniumAdvanced
                 x.SetDataPrivacy(true);
                 x.SetNewsletter(true);
                 x.SetTermsAndConditions(true);
-                //x.SetSubmit();
+                x.SetSubmit();
             });
+
             GetPage<MainPage>(x =>
             {
+                Assert.Equal(x.IsSignedIn(), $"{person.FirstName} {person.LastName}");
             });
         }
     }
