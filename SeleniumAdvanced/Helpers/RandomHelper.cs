@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FluentAssertions;
+using System;
 using System.Collections.Generic;
 
 namespace SeleniumAdvanced.Helpers
@@ -14,6 +15,7 @@ namespace SeleniumAdvanced.Helpers
 
         public static T GetRandomItemFromList<T>(List<T> list)
         {
+            list.Should().NotBeEmpty();
             int index = _random.Next(list.Count);
             return list[index];
         }
