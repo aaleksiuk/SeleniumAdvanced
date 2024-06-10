@@ -1,4 +1,5 @@
-﻿using SeleniumAdvanced.Helpers;
+﻿using FluentAssertions;
+using SeleniumAdvanced.Helpers;
 using SeleniumAdvanced.Pages;
 using SeleniumAdvanced.Providers;
 using Xunit;
@@ -45,8 +46,9 @@ namespace SeleniumAdvanced
 
             GetPage<MainPage>(x =>
             {
-                Assert.Equal(x.IsSignedIn(), $"{person.FirstName} {person.LastName}");
+                x.IsSignedIn().Should().Be($"{person.FirstName} {person.LastName}");
             });
         }
     }
 }
+
