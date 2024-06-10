@@ -1,6 +1,9 @@
-﻿using OpenQA.Selenium;
+﻿using Newtonsoft.Json;
+using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using SeleniumAdvanced.Enums;
 using System;
+using System.IO;
 using Xunit.Abstractions;
 
 namespace SeleniumAdvanced.Helpers
@@ -9,11 +12,21 @@ namespace SeleniumAdvanced.Helpers
     {
         protected readonly IWebDriver driver;
         protected readonly ITestOutputHelper output;
+        public Browsers Browser { get; set; }
+
         public TestBase(ITestOutputHelper output)
         {
+            var projectRoot = Directory.GetParent(AppContext.BaseDirectory).Parent.Parent.FullName;
+            var filePath = Path.Combine(projectRoot, "SeleniumAdvanced\\appconfig.json");
+
+            var jsonString = File.ReadAllText(filePath);
+
+            var browserConfig = JsonConvert.DeserializeObject<BrowserConfig>(jsonString);
+            Browser = browserConfig.Browser;
+
             var options = new ChromeOptions();
             options.AddArgument("start-maximized");
-            driver = new ChromeDriver(options);
+            driver = InitializeDriver(Browser, options);
             this.output = output;
         }
 
@@ -27,6 +40,17 @@ namespace SeleniumAdvanced.Helpers
             var page = (T)Activator.CreateInstance(typeof(T), driver);
             action(page);
             return page;
+        }
+        private IWebDriver InitializeDriver(Browsers browser, ChromeOptions options)
+        {
+            switch (browser)
+            {
+                case Browsers.Chrome:
+                    options.AddArgument("start-maximized");
+                    return new ChromeDriver(options);
+                default:
+                    throw new ArgumentException($"Unsupported browser: {browser}");
+            }
         }
     }
 }
