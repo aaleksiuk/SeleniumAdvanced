@@ -15,6 +15,7 @@ namespace SeleniumAdvanced.Helpers
         public string Title { get; }
         public string FirstName { get; }
         public string LastName { get; }
+        public string FullName { get; }
         public string Mail { get; }
         public string Password { get; }
         public string BirthDate { get; }
@@ -27,6 +28,7 @@ namespace SeleniumAdvanced.Helpers
             Title = gender == Gender.Male ? "Mr." : "Mrs.";
             FirstName = personGenerator.Name.FirstName(gender == Gender.Male ? Bogus.DataSets.Name.Gender.Male : Bogus.DataSets.Name.Gender.Female);
             LastName = personGenerator.Name.LastName(gender == Gender.Male ? Bogus.DataSets.Name.Gender.Male : Bogus.DataSets.Name.Gender.Female);
+            FullName = FirstName + " " + LastName;
 
             Mail = GenerateMail();
             Password = personGenerator.Internet.Password(16, false, "", "!@#$%^&*()");

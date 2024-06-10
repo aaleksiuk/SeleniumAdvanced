@@ -46,7 +46,7 @@ namespace SeleniumAdvanced
 
             GetPage<MainPage>(x =>
             {
-                x.IsSignedIn().Should().Be($"{person.FirstName} {person.LastName}");
+                x.IsSignedIn().Should().Be($"{person.FullName}");
             });
         }
     }
