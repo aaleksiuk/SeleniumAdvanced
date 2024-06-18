@@ -8,9 +8,30 @@ namespace SeleniumAdvanced.Extensions
 {
     public static class WebDriverExtensions
     {
-        public static IWebElement WaitAndFind(this IWebDriver driver, By by)
+        public static Boolean IsDisplayed(this IWebDriver driver, By by)
         {
-            var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
+            try
+            {
+                return driver.FindElement(by).Displayed;
+            }
+            catch (NoSuchElementException)
+            {
+                return false;
+            }
+        }
+        public static Boolean IsDisplayedWithTimeout(this IWebDriver driver, By by, int seconds = 3)
+        {
+            try
+            {
+                new WebDriverWait(driver, TimeSpan.FromSeconds(seconds)).Until(_ => driver.IsDisplayed(by));
+            }
+            catch (WebDriverTimeoutException)
+            {
+            }
+            return driver.IsDisplayed(by);
+        }
+        public static IWebElement WaitAndFind(this IWebDriver driver, By by, WebDriverWait wait)
+        {
             try
             {
                 return wait.Until(d =>
@@ -22,10 +43,8 @@ namespace SeleniumAdvanced.Extensions
             }
         }
 
-        public static List<IWebElement> WaitAndFindAll(this IWebDriver driver, By by)
+        public static List<IWebElement> WaitAndFindAll(this IWebDriver driver, By by, WebDriverWait wait)
         {
-            var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
-
             try
             {
                 return wait.Until(d =>

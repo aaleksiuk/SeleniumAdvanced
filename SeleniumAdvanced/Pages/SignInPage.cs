@@ -3,12 +3,10 @@ using SeleniumAdvanced.Extensions;
 
 namespace SeleniumAdvanced.Pages
 {
-    public class SignInPage(IWebDriver driver)
+    public class SignInPage(IWebDriver driver) : BasePage(driver)
     {
-        private IWebElement CreateAccountLink => driver.WaitAndFind(By.CssSelector(".no-account"));
-        public void CreateAccount()
-        {
-            CreateAccountLink.Click();
-        }
+        private IWebElement CreateAccountLink => Driver.WaitAndFind(By.CssSelector(".no-account"), DefaultWait);
+
+        public void CreateAccount() => CreateAccountLink.Click();
     }
 }

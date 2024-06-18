@@ -5,6 +5,7 @@ using SeleniumAdvanced.Enums;
 using System;
 using System.IO;
 using Xunit.Abstractions;
+using SeleniumAdvanced.Pages;
 
 namespace SeleniumAdvanced.Helpers
 {
@@ -35,9 +36,10 @@ namespace SeleniumAdvanced.Helpers
             driver.Quit();
         }
 
-        public T GetPage<T>(Action<T> action) where T : class
+        public T GetPage<T>(Action<T> action) where T : BasePage
         {
             var page = (T)Activator.CreateInstance(typeof(T), driver);
+            Console.WriteLine($"At {typeof(T).Name}");
             action(page);
             return page;
         }
