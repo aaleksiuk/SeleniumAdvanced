@@ -1,17 +1,13 @@
 ﻿using Newtonsoft.Json;
 using SeleniumAdvanced.Enums;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SeleniumAdvanced.Helpers
 {
     public class Configuration
     {
-        private static readonly Lazy <Configuration> instance = new Lazy<Configuration>(() => new Configuration ());
+        private static readonly Lazy<Configuration> instance = new Lazy<Configuration>(() => new Configuration());
         public Browsers Browser { get; private set; }
         public string BaseUrl { get; private set; }
 

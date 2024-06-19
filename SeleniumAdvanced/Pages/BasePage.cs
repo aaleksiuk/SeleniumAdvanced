@@ -1,6 +1,5 @@
 ﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;
-using OpenQA.Selenium.Support.UI;
 using SeleniumAdvanced.Extensions;
 using System;
 
@@ -26,7 +25,7 @@ namespace SeleniumAdvanced.Pages
         public void ClearAndSendKeys(IWebElement element, string text)
         {
             element.Clear();
-            SendKeys(element,text);
+            SendKeys(element, text);
         }
 
         public void Click(IWebElement element)
