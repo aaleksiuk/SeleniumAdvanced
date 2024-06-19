@@ -1,11 +1,8 @@
-﻿using Newtonsoft.Json;
-using OpenQA.Selenium;
-using OpenQA.Selenium.Chrome;
-using SeleniumAdvanced.Enums;
-using System;
-using System.IO;
-using Xunit.Abstractions;
+﻿using OpenQA.Selenium;
 using SeleniumAdvanced.Pages;
+using SeleniumAdvanced.Providers;
+using System;
+using Xunit.Abstractions;
 
 namespace SeleniumAdvanced.Helpers
 {
@@ -13,21 +10,13 @@ namespace SeleniumAdvanced.Helpers
     {
         protected readonly IWebDriver driver;
         protected readonly ITestOutputHelper output;
-        public Browsers Browser { get; set; }
+        public UrlProvider UrlProvider { get; }
 
         public TestBase(ITestOutputHelper output)
         {
-            var projectRoot = Directory.GetParent(AppContext.BaseDirectory).Parent.Parent.FullName;
-            var filePath = Path.Combine(projectRoot, "SeleniumAdvanced\\appconfig.json");
-
-            var jsonString = File.ReadAllText(filePath);
-
-            var browserConfig = JsonConvert.DeserializeObject<BrowserConfig>(jsonString);
-            Browser = browserConfig.Browser;
-
-            var options = new ChromeOptions();
-            options.AddArgument("start-maximized");
-            driver = InitializeDriver(Browser, options);
+            var browser = Configuration.Instance.Browser;
+            driver = new DriverProvider().InitializeDriver(browser);
+            UrlProvider = new UrlProvider(Configuration.Instance.BaseUrl);
             this.output = output;
         }
 
@@ -42,17 +31,6 @@ namespace SeleniumAdvanced.Helpers
             Console.WriteLine($"At {typeof(T).Name}");
             action(page);
             return page;
-        }
-        private IWebDriver InitializeDriver(Browsers browser, ChromeOptions options)
-        {
-            switch (browser)
-            {
-                case Browsers.Chrome:
-                    options.AddArgument("start-maximized");
-                    return new ChromeDriver(options);
-                default:
-                    throw new ArgumentException($"Unsupported browser: {browser}");
-            }
         }
     }
 }

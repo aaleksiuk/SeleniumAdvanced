@@ -16,10 +16,10 @@ namespace SeleniumAdvanced
         [Fact]
         public void CreateAccount()
         {
-            this.driver.Navigate().GoToUrl(UrlProvider.BaseUrl);
+            this.driver.Navigate().GoToUrl(UrlProvider.AppUrl);
             var person = new PersonGenerator();
 
-            GetPage<MainPage>(x =>
+            GetPage<HeaderPage>(x =>
             {
                 x.SignIn();
             });
@@ -44,7 +44,7 @@ namespace SeleniumAdvanced
                 x.SetSubmit();
             });
 
-            GetPage<MainPage>(x =>
+            GetPage<HeaderPage>(x =>
             {
                 x.IsSignedIn().Should().Be($"{person.FullName}");
             });

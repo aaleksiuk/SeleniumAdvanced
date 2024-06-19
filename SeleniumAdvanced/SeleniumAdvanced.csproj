@@ -77,15 +77,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Enums\Browsers.cs" />
-    <Compile Include="Enums\Urls.cs" />
-    <Compile Include="Helpers\BrowserConfig.cs" />
+    <Compile Include="Helpers\Configuration.cs" />
+    <Compile Include="Helpers\ConfigurationModel.cs" />
     <Compile Include="Helpers\PersonGenerator.cs" />
     <Compile Include="Extensions\WebdriverExtensions.cs" />
     <Compile Include="Helpers\RandomHelper.cs" />
     <Compile Include="Helpers\TestBase.cs" />
     <Compile Include="Pages\BasePage.cs" />
     <Compile Include="Pages\CreateAccountPage.cs" />
-    <Compile Include="Pages\MainPage.cs" />
+    <Compile Include="Pages\HeaderPage.cs" />
     <Compile Include="Pages\SignInPage.cs" />
     <Compile Include="Providers\DriverProvider.cs" />
     <Compile Include="Providers\UrlProvider.cs" />

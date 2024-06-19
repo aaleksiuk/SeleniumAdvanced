@@ -1,24 +1,32 @@
 ﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
+using SeleniumAdvanced.Extensions;
 using System;
 
 namespace SeleniumAdvanced.Pages
 {
-    public abstract class BasePage(IWebDriver driver)
+    public abstract class BasePage
     {
-        public IWebDriver Driver { get; set; } = driver;
-        public WebDriverWait DefaultWait { get; set; } = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
-        public Actions ActionsDriver { get; set; } = new Actions(driver);
+        public IWebDriver Driver { get; }
+        public Actions ActionsDriver { get; }
 
-        public void SendKeys(IWebElement element, string text, bool shouldClear)
+        protected BasePage(IWebDriver driver)
         {
-            if (shouldClear)
-            {
-                element.Clear();
-            }
+            Driver = driver;
+            ActionsDriver = new Actions(Driver);
+        }
+
+        public void SendKeys(IWebElement element, string text)
+        {
             Console.WriteLine($"Typing: {text}");
             element.SendKeys(text);
+        }
+
+        public void ClearAndSendKeys(IWebElement element, string text)
+        {
+            element.Clear();
+            SendKeys(element,text);
         }
 
         public void Click(IWebElement element)
@@ -32,7 +40,7 @@ namespace SeleniumAdvanced.Pages
             {
                 ActionsDriver.ScrollToElement(element);
                 ActionsDriver.ScrollByAmount(0, 10);
-                DefaultWait.Until(_ => element.Displayed && element.Enabled);
+                Driver.DefaultWait().Until(_ => element.Displayed && element.Enabled);
                 element.Click();
                 Console.WriteLine(e.ToString());
                 throw;

@@ -5,8 +5,8 @@ namespace SeleniumAdvanced.Pages
 {
     public class SignInPage(IWebDriver driver) : BasePage(driver)
     {
-        private IWebElement CreateAccountLink => Driver.WaitAndFind(By.CssSelector(".no-account"), DefaultWait);
+        private IWebElement CreateAccountLink => Driver.WaitAndFind(By.CssSelector(".no-account"));
 
-        public void CreateAccount() => CreateAccountLink.Click();
+        public void CreateAccount() => Click(CreateAccountLink);
     }
 }

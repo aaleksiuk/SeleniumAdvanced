@@ -8,6 +8,8 @@ namespace SeleniumAdvanced.Extensions
 {
     public static class WebDriverExtensions
     {
+        public static WebDriverWait DefaultWait(this IWebDriver driver) => new WebDriverWait(driver, TimeSpan.FromSeconds(10));
+
         public static Boolean IsDisplayed(this IWebDriver driver, By by)
         {
             try
@@ -30,11 +32,11 @@ namespace SeleniumAdvanced.Extensions
             }
             return driver.IsDisplayed(by);
         }
-        public static IWebElement WaitAndFind(this IWebDriver driver, By by, WebDriverWait wait)
+        public static IWebElement WaitAndFind(this IWebDriver driver, By by)
         {
             try
             {
-                return wait.Until(d =>
+                return driver.DefaultWait().Until(d =>
                 d.FindElement(by).Displayed ? d.FindElement(by) : throw new NoSuchElementException($"Element with locator '{by}' was not found"));
             }
             catch (NoSuchElementException)
@@ -43,11 +45,11 @@ namespace SeleniumAdvanced.Extensions
             }
         }
 
-        public static List<IWebElement> WaitAndFindAll(this IWebDriver driver, By by, WebDriverWait wait)
+        public static List<IWebElement> WaitAndFindAll(this IWebDriver driver, By by)
         {
             try
             {
-                return wait.Until(d =>
+                return driver.DefaultWait().Until(d =>
                 {
                     var elements = d.FindElements(by).ToList();
                     return elements.Any() ? elements : throw new NoSuchElementException($"Element with locator '{by}' was not found within the specified timeout.");
