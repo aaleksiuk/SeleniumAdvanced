@@ -1,5 +1,7 @@
 ﻿using OpenQA.Selenium;
 using SeleniumAdvanced.Extensions;
+using SeleniumAdvanced.Helpers;
+using System;
 using System.Collections.Generic;
 
 namespace SeleniumAdvanced.Pages
@@ -20,15 +22,18 @@ namespace SeleniumAdvanced.Pages
         private IWebElement Submit => Driver.WaitAndFind(By.CssSelector("button[data-link-action='save-customer']"));
         private IWebElement SuccessMessage => Driver.WaitAndFind(By.Id("validator-message"));
 
-        public void SetSocialTitle(string gender)
+        public void SetSocialTitle(PersonGenerator.Gender gender)
         {
-            if (gender.Equals("Mr."))
+            switch (gender)
             {
-                SocialTitle[0].Click();
-            }
-            else if (gender.Equals("Mrs."))
-            {
-                SocialTitle[1].Click();
+                case PersonGenerator.Gender.Male:
+                    SocialTitle[0].Click();
+                    break;
+                case PersonGenerator.Gender.Female:
+                    SocialTitle[1].Click();
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(gender),gender, null);
             }
         }
         public void SetFirstName(string firstName) => SendKeys(FirstName, firstName);
@@ -37,34 +42,10 @@ namespace SeleniumAdvanced.Pages
         public void SetPassword(string password) => SendKeys(Password, password);
         public void SetBirthdate(string birthdate) => SendKeys(Birthdate, birthdate);
 
-        public void SetReceiveOffers(bool receiveOffers)
-        {
-            if (receiveOffers)
-            {
-                Click(ReceiveOffers);
-            }
-        }
-        public void SetDataPrivacy(bool dataPrivacy)
-        {
-            if (dataPrivacy)
-            {
-                Click(DataPrivacy);
-            }
-        }
-        public void SetNewsletter(bool newsletter)
-        {
-            if (newsletter)
-            {
-                Click(Newsletter);
-            }
-        }
-        public void SetTermsAndConditions(bool termsAndConditions)
-        {
-            if (termsAndConditions)
-            {
-                Click(TermsAndConditions);
-            }
-        }
+        public void ClickReceiveOffers() => Click(ReceiveOffers);
+        public void ClickDataPrivacy() => Click(DataPrivacy);
+        public void ClickNewsletter() => Click(Newsletter);
+        public void ClickTermsAndConditions() => Click(TermsAndConditions);
         public void SetSubmit() => Click(Submit);
     }
 }

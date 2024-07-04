@@ -2,48 +2,52 @@
 using OpenQA.Selenium.Interactions;
 using SeleniumAdvanced.Extensions;
 using System;
+using System.Threading;
 
-namespace SeleniumAdvanced.Pages
+namespace SeleniumAdvanced.Pages;
+
+public abstract class BasePage
 {
-    public abstract class BasePage
+    public IWebDriver Driver { get; }
+    public Actions ActionsDriver { get; }
+
+    protected BasePage(IWebDriver driver)
     {
-        public IWebDriver Driver { get; }
-        public Actions ActionsDriver { get; }
+        Driver = driver;
+        ActionsDriver = new Actions(Driver);
+    }
 
-        protected BasePage(IWebDriver driver)
+    public void SendKeys(IWebElement element, string text, bool clear = true)
+    {
+        if (clear)
         {
-            Driver = driver;
-            ActionsDriver = new Actions(Driver);
+            element.Clear();
+            Console.WriteLine($"Typing: {text}");
+            element.SendKeys(text);
         }
-
-        public void SendKeys(IWebElement element, string text)
+        else
         {
             Console.WriteLine($"Typing: {text}");
             element.SendKeys(text);
         }
+    }
 
-        public void ClearAndSendKeys(IWebElement element, string text)
+    public void Click(IWebElement element)
+    {
+        Console.WriteLine($"Clicking: {element.Text}");
+        try
         {
-            element.Clear();
-            SendKeys(element, text);
+            element.Click();
         }
-
-        public void Click(IWebElement element)
+        catch (ElementClickInterceptedException e)
         {
-            Console.WriteLine($"Clicking: {element.Text}");
-            try
-            {
-                element.Click();
-            }
-            catch (ElementClickInterceptedException e)
-            {
-                ActionsDriver.ScrollToElement(element);
-                ActionsDriver.ScrollByAmount(0, 10);
-                Driver.DefaultWait().Until(_ => element.Displayed && element.Enabled);
-                element.Click();
-                Console.WriteLine(e.ToString());
-                throw;
-            }
+            ActionsDriver.ScrollToElement(element);
+            ActionsDriver.ScrollByAmount(0, 10);
+            Thread.Sleep(500);
+            Driver.GetWait().Until(_ => element.Displayed && element.Enabled);
+            element.Click();
+            Console.WriteLine(e.ToString());
+            throw;
         }
     }
 }

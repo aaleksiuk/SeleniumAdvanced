@@ -1,12 +1,11 @@
 ﻿using OpenQA.Selenium;
 using SeleniumAdvanced.Extensions;
 
-namespace SeleniumAdvanced.Pages
-{
-    public class SignInPage(IWebDriver driver) : BasePage(driver)
-    {
-        private IWebElement CreateAccountLink => Driver.WaitAndFind(By.CssSelector(".no-account"));
+namespace SeleniumAdvanced.Pages;
 
-        public void CreateAccount() => Click(CreateAccountLink);
-    }
+public class SignInPage(IWebDriver driver) : BasePage(driver)
+{
+    private IWebElement CreateAccountLink => Driver.WaitAndFind(By.CssSelector(".no-account"));
+
+    public void CreateAccount() => Click(CreateAccountLink);
 }

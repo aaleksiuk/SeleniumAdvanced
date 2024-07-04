@@ -2,53 +2,50 @@
 using SeleniumAdvanced.Helpers;
 using SeleniumAdvanced.Pages;
 using SeleniumAdvanced.Providers;
-using Xunit;
-using Xunit.Abstractions;
+using NUnit.Framework;
 
-namespace SeleniumAdvanced
+namespace SeleniumAdvanced;
+
+[TestFixture]
+public class CreateAnAccount : TestBase
 {
-    public class CreateAnAccount : TestBase
+    [Test]
+    public void CreateAccount()
     {
-        public CreateAnAccount(ITestOutputHelper output) : base(output)
+        // Arrange
+        this.driver.Navigate().GoToUrl(UrlProvider.AppUrl);
+        var person = new PersonGenerator();
+
+        // Act
+        GetPage<HeaderPage>(x =>
         {
+            x.SignIn();
+        });
 
-        }
-        [Fact]
-        public void CreateAccount()
+        GetPage<SignInPage>(x =>
         {
-            this.driver.Navigate().GoToUrl(UrlProvider.AppUrl);
-            var person = new PersonGenerator();
+            x.CreateAccount();
+        });
 
-            GetPage<HeaderPage>(x =>
-            {
-                x.SignIn();
-            });
+        GetPage<CreateAccountPage>(x =>
+        {
+            x.SetSocialTitle(person.Title);
+            x.SetFirstName(person.FirstName);
+            x.SetLastName(person.LastName);
+            x.SetEmail(person.Mail);
+            x.SetPassword(person.Password);
+            x.SetBirthdate(person.BirthDate);
+            x.ClickReceiveOffers();
+            x.ClickDataPrivacy();
+            x.ClickNewsletter();
+            x.ClickTermsAndConditions();
+            x.SetSubmit();
+        });
 
-            GetPage<SignInPage>(x =>
-            {
-                x.CreateAccount();
-            });
-
-            GetPage<CreateAccountPage>(x =>
-            {
-                x.SetSocialTitle(person.Title);
-                x.SetFirstName(person.FirstName);
-                x.SetLastName(person.LastName);
-                x.SetEmail(person.Mail);
-                x.SetPassword(person.Password);
-                x.SetBirthdate(person.BirthDate);
-                x.SetReceiveOffers(true);
-                x.SetDataPrivacy(true);
-                x.SetNewsletter(true);
-                x.SetTermsAndConditions(true);
-                x.SetSubmit();
-            });
-
-            GetPage<HeaderPage>(x =>
-            {
-                x.IsSignedIn().Should().Be($"{person.FullName}");
-            });
-        }
+        //Assert
+        GetPage<HeaderPage>(x =>
+        {
+            x.GetSignedInText().Should().Be($"{person.FullName}");
+        });
     }
 }
-
