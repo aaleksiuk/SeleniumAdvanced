@@ -22,14 +22,10 @@ public abstract class BasePage
         if (clear)
         {
             element.Clear();
-            Console.WriteLine($"Typing: {text}");
-            element.SendKeys(text);
+
         }
-        else
-        {
-            Console.WriteLine($"Typing: {text}");
-            element.SendKeys(text);
-        }
+        Console.WriteLine($"Typing: {text}");
+        element.SendKeys(text);
     }
 
     public void Click(IWebElement element)

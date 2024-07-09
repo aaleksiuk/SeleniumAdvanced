@@ -1,10 +1,11 @@
 ﻿using FluentAssertions;
 using SeleniumAdvanced.Helpers;
-using SeleniumAdvanced.Pages;
 using SeleniumAdvanced.Providers;
+using SeleniumAdvanced.Pages;
 using NUnit.Framework;
 
-namespace SeleniumAdvanced;
+
+namespace SeleniumAdvanced.Tests;
 
 [TestFixture]
 public class CreateAnAccount : TestBase
