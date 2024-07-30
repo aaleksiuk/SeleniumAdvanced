@@ -23,6 +23,11 @@ internal class DriverProvider
     {
         var options = new ChromeOptions();
         options.AddArgument("start-maximized");
+        options.AddArgument("--no-first-run");
+        options.AddArgument("--no-default-browser-check");
+        options.AddArgument("--disable-default-apps");
+        options.AddArgument("--disable-popup-blocking");
+        options.AddArgument("--disable-infobars");
         return new ChromeDriver(options);
     }
 
