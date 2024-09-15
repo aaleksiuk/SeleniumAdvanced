@@ -61,4 +61,21 @@ public static class WebDriverExtensions
             throw new NoSuchElementException($"Element with locator '{by}' was not found within the specified timeout.");
         }
     }
+
+
+    public static List<IWebElement> WaitAndFindAll(this IWebDriver driver, By by, IWebElement parent)
+    {
+        try
+        {
+            return driver.GetWait().Until(d =>
+            {
+                var elements = parent.FindElements(by).ToList();
+                return elements.Any() ? elements : throw new NoSuchElementException($"Element with locator '{by}' was not found within the specified timeout.");
+            });
+        }
+        catch (NoSuchElementException)
+        {
+            throw new NoSuchElementException($"Element with locator '{by}' was not found within the specified timeout.");
+        }
+    }
 }

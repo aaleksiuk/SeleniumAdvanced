@@ -46,4 +46,26 @@ public abstract class BasePage
             throw;
         }
     }
+    public void Hover(IWebElement element)
+    {
+        Console.WriteLine($"Hover on: {element.Text}");
+        try
+        {
+            ActionsDriver.Reset();
+            ActionsDriver.MoveToElement(element);
+            ActionsDriver.Perform();
+        }
+        catch (ElementClickInterceptedException e)
+        {
+            ActionsDriver.ScrollToElement(element);
+            ActionsDriver.ScrollByAmount(0, 10);
+            Thread.Sleep(500);
+            Driver.GetWait().Until(_ => element.Displayed && element.Enabled);
+            ActionsDriver.Reset();
+            ActionsDriver.MoveToElement(element);
+            ActionsDriver.Perform();
+            Console.WriteLine(e.ToString());
+            throw;
+        }
+    }
 }

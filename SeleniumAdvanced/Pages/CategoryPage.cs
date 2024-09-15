@@ -50,8 +50,8 @@ public class CategoryPage(IWebDriver driver) : BasePage(driver)
         });
     }
     public bool IsPriceFilterDisplayed(string priceRange) => ActiveFilterPriceElement.Text.Contains(priceRange);
-    public void ClearPriceFilter() => ActiveFilterPriceElementClose.Click();
+    public void ClearPriceFilter() => Click(ActiveFilterPriceElementClose);
     public string GetCategoryName() => CategoriesTopMenuName.Text;
     public bool IsFiltersSideMenuDisplayed() => FiltersSideMenu.Displayed;
-    public string GetPaginationText() => Pagination.Text;
+    public string PaginationText => Pagination.Text;
 }

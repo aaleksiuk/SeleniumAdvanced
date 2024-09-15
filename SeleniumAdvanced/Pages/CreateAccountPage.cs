@@ -26,10 +26,10 @@ namespace SeleniumAdvanced.Pages
             switch (gender)
             {
                 case PersonGenerator.Gender.Male:
-                    SocialTitle[0].Click();
+                    Click(SocialTitle[0]);
                     break;
                 case PersonGenerator.Gender.Female:
-                    SocialTitle[1].Click();
+                    Click(SocialTitle[1]);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(gender), gender, null);

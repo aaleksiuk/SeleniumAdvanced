@@ -28,6 +28,11 @@ internal class DriverProvider
         options.AddArgument("--disable-default-apps");
         options.AddArgument("--disable-popup-blocking");
         options.AddArgument("--disable-infobars");
+        options.AddExcludedArgument("enable-automation");
+        options.AddArgument("--no-sandbox");
+        options.AddArgument("--disable-extensions");
+        options.AddArgument("test-type");
+        options.AddArgument("--disable-search-engine-choice-screen");
         return new ChromeDriver(options);
     }
 
