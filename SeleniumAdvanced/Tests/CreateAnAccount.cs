@@ -1,9 +1,8 @@
 ﻿using FluentAssertions;
-using SeleniumAdvanced.Helpers;
-using SeleniumAdvanced.Providers;
-using SeleniumAdvanced.Pages;
 using NUnit.Framework;
-
+using SeleniumAdvanced.Helpers;
+using SeleniumAdvanced.Pages;
+using static SeleniumAdvanced.Helpers.CreateAccountHelper;
 
 namespace SeleniumAdvanced.Tests;
 
@@ -14,38 +13,12 @@ public class CreateAnAccount : TestBase
     public void CreateAccount()
     {
         // Arrange
-        this.driver.Navigate().GoToUrl(UrlProvider.AppUrl);
-        var person = new PersonGenerator();
-
-        // Act
-        GetPage<HeaderPage>(x =>
-        {
-            x.SignIn();
-        });
-
-        GetPage<SignInPage>(x =>
-        {
-            x.CreateAccount();
-        });
-
-        GetPage<CreateAccountPage>(x =>
-        {
-            x.SetSocialTitle(person.Title);
-            x.SetFirstName(person.FirstName);
-            x.SetLastName(person.LastName);
-            x.SetEmail(person.Mail);
-            x.SetPassword(person.Password);
-            x.SetBirthdate(person.BirthDate);
-            x.ClickReceiveOffers();
-            x.ClickDataPrivacy();
-            x.ClickNewsletter();
-            x.ClickTermsAndConditions();
-            x.SetSubmit();
-        });
+        var personService = new CreateAccountService(this.driver);
 
         //Assert
         GetPage<HeaderPage>(x =>
         {
+            var person = personService.CreateNewAccount();
             x.GetSignedInText().Should().Be($"{person.FullName}");
         });
     }

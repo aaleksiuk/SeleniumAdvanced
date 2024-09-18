@@ -62,7 +62,6 @@ public static class WebDriverExtensions
         }
     }
 
-
     public static List<IWebElement> WaitAndFindAll(this IWebDriver driver, By by, IWebElement parent)
     {
         try

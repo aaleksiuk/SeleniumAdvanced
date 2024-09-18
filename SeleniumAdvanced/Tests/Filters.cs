@@ -37,9 +37,9 @@ public class Filters : TestBase
         {
             var productsNumber = x.GetDisplayedProductsNumber();
             x.MoveSliderFrom(basePriceFilterSliderFrom, priceFilterSliderFrom);
-            Thread.Sleep(2000);
+            Thread.Sleep(3000);
             x.MoveSliderTo(basePriceFilterSliderTo, priceFilterSliderTo);
-            Thread.Sleep(2000);
+            Thread.Sleep(3000);
 
             var productPrices = x.GetProductPrices().ToList();
 
@@ -49,7 +49,7 @@ public class Filters : TestBase
             {
                 try
                 {
-                    price.Should().BeInRange(priceFilterSliderFrom, priceFilterSliderTo, $"Because the product price {price} should be within the filter range {priceFilterSliderFrom} to {priceFilterSliderTo}");
+                    price.Should().BeInRange(priceFilterSliderFrom, priceFilterSliderTo, $"because the product price {price} should be within the filter range {priceFilterSliderFrom} to {priceFilterSliderTo}");
                 }
                 catch (AssertionFailedException ex)
                 {

@@ -9,7 +9,7 @@ namespace SeleniumAdvanced.Tests;
 [TestFixture]
 public class SearchDropdown : TestBase
 {
-    string searchText = "HUMMINGBIRD";
+    readonly string searchText = "HUMMINGBIRD";
     [Test]
     public void SearchText()
     {

@@ -3,13 +3,13 @@ using SeleniumAdvanced.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web.UI.WebControls;
 
 namespace SeleniumAdvanced.Pages;
 
 public class HeaderPage(IWebDriver driver) : BasePage(driver)
 {
     private IWebElement SignInBtn => Driver.WaitAndFind(By.CssSelector(".user-info"));
+    private IWebElement LogOutBtn => Driver.WaitAndFind(By.CssSelector("a.logout"));
     private IWebElement ViewCustomerAccountBtn => Driver.WaitAndFind(By.CssSelector("span.hidden-sm-down"));
 
     private IWebElement SearchWidget => Driver.WaitAndFind(By.CssSelector(".search-widget input[name='s']"));
@@ -21,6 +21,7 @@ public class HeaderPage(IWebDriver driver) : BasePage(driver)
     private IList<IWebElement> TopMenuSubItems => Driver.WaitAndFindAll(By.CssSelector("#top-menu > li.category li.category")).Where(i => i.Displayed).ToList();
 
     public void SignIn() => Click(SignInBtn);
+    public void LogOut() => Click(LogOutBtn);
     public string GetSignedInText() => ViewCustomerAccountBtn.Text;
     public void ClickSearchWidget() => Click(SearchWidget);
     public void SetSearchText(string SearchText) => SendKeys(SearchWidget, SearchText);
