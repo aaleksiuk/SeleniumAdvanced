@@ -9,13 +9,13 @@ namespace SeleniumAdvanced.Tests;
 [TestFixture]
 public class SearchDropdown : TestBase
 {
-    readonly string searchText = "HUMMINGBIRD";
+    private readonly string searchText = "HUMMINGBIRD";
     [Test]
+    [Repeat(10)]
     public void SearchText()
     {
-
         // Arrange
-        this.driver.Navigate().GoToUrl(UrlProvider.AppUrl);
+        driver.Navigate().GoToUrl(UrlProvider.AppUrl);
 
         // Act
         GetPage<HeaderPage>(x =>
@@ -26,7 +26,7 @@ public class SearchDropdown : TestBase
         //Assert
         GetPage<HeaderPage>(x =>
         {
-            x.GetSearchDropdownItemText().Should().AllSatisfy(ContainsText);
+            x.GetSearchDropdownItemText.Should().AllSatisfy(ContainsText);
         });
     }
     private void ContainsText(string text)

@@ -10,11 +10,12 @@ namespace SeleniumAdvanced.Tests;
 public class SearchTest : TestBase
 {
     [Test]
+    [Repeat(10)]
     public void Search()
     {
-        var searchText = "MUG THE BEST";
         // Arrange
-        this.driver.Navigate().GoToUrl(UrlProvider.AppUrl);
+        var searchText = "MUG THE BEST";
+        driver.Navigate().GoToUrl(UrlProvider.AppUrl);
 
         // Act
         GetPage<HeaderPage>(x =>
@@ -26,7 +27,7 @@ public class SearchTest : TestBase
         //Assert
         GetPage<SearchResultPage>(x =>
         {
-            x.GetProductTitle().Should().Be($"{searchText}");
+            x.GetProductTitle.Should().Be(searchText);
         });
     }
 }

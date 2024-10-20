@@ -10,16 +10,17 @@ namespace SeleniumAdvanced.Tests;
 public class CreateAnAccount : TestBase
 {
     [Test]
+    [Repeat(10)]
     public void CreateAccount()
     {
         // Arrange
-        var personService = new CreateAccountService(this.driver);
+        var personService = new CreateAccountService(driver);
 
         //Assert
         GetPage<HeaderPage>(x =>
         {
             var person = personService.CreateNewAccount();
-            x.GetSignedInText().Should().Be($"{person.FullName}");
+            x.GetSignedInText.Should().Be($"{person.FullName}");
         });
     }
 }

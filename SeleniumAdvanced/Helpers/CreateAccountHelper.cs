@@ -3,44 +3,40 @@ using OpenQA.Selenium;
 using SeleniumAdvanced.Pages;
 using SeleniumAdvanced.Providers;
 
-namespace SeleniumAdvanced.Helpers
+namespace SeleniumAdvanced.Helpers;
+internal class CreateAccountHelper
 {
-    internal class CreateAccountHelper
+    public class CreateAccountService(IWebDriver driver)
     {
-        public class CreateAccountService(IWebDriver driver)
+        public PersonGenerator CreateNewAccount()
         {
-            private readonly IWebDriver _driver = driver;
+            var person = new PersonGenerator();
 
-            public PersonGenerator CreateNewAccount()
-            {
-                var person = new PersonGenerator();
+            driver.Navigate().GoToUrl(UrlProvider.AppUrl);
 
-                _driver.Navigate().GoToUrl(UrlProvider.AppUrl);
+            var headerPage = new HeaderPage(driver);
+            headerPage.SignIn();
 
-                var headerPage = new HeaderPage(_driver);
-                headerPage.SignIn();
+            var signInPage = new SignInPage(driver);
+            signInPage.CreateAccount();
 
-                var signInPage = new SignInPage(_driver);
-                signInPage.CreateAccount();
+            var createAccountPage = new CreateAccountPage(driver);
+            createAccountPage.SetSocialTitle(person.Title);
+            createAccountPage.SetFirstName(person.FirstName);
+            createAccountPage.SetLastName(person.LastName);
+            createAccountPage.SetEmail(person.Mail);
+            createAccountPage.SetPassword(person.Password);
+            createAccountPage.SetBirthdate(person.BirthDate);
+            createAccountPage.CheckReceiveOffersCheckbox();
+            createAccountPage.CheckDataPrivacyCheckbox();
+            createAccountPage.CheckNewsletterCheckbox();
+            createAccountPage.CheckClickTermsAndConditionsCheckbox();
+            createAccountPage.SubmitForm();
 
-                var createAccountPage = new CreateAccountPage(_driver);
-                createAccountPage.SetSocialTitle(person.Title);
-                createAccountPage.SetFirstName(person.FirstName);
-                createAccountPage.SetLastName(person.LastName);
-                createAccountPage.SetEmail(person.Mail);
-                createAccountPage.SetPassword(person.Password);
-                createAccountPage.SetBirthdate(person.BirthDate);
-                createAccountPage.ClickReceiveOffers();
-                createAccountPage.ClickDataPrivacy();
-                createAccountPage.ClickNewsletter();
-                createAccountPage.ClickTermsAndConditions();
-                createAccountPage.SetSubmit();
+            headerPage.GetSignedInText.Should().Be($"{person.FullName}");
+            headerPage.GetSignedInText.Should().Be($"{person.FullName}");
 
-                headerPage.GetSignedInText().Should().Be($"{person.FullName}");
-                headerPage.GetSignedInText().Should().Be($"{person.FullName}");
-
-                return person;
-            }
+            return person;
         }
     }
 }

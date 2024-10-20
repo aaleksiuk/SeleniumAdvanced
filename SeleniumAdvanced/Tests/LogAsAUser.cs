@@ -15,11 +15,12 @@ public class LogAsAUser : TestBase
     public new void Setup()
     {
         // Use the service to create an account
-        var personService = new CreateAccountService(this.driver);
+        var personService = new CreateAccountService(driver);
         _userToLogIn = personService.CreateNewAccount();
     }
 
     [Test]
+    [Repeat(10)]
     public void LogInUser()
     {
         // Act
@@ -43,7 +44,7 @@ public class LogAsAUser : TestBase
         // Assert
         GetPage<HeaderPage>(x =>
         {
-            x.GetSignedInText().Should().Be($"{_userToLogIn.FullName}");
+            x.GetSignedInText.Should().Be($"{_userToLogIn.FullName}");
         });
     }
 }

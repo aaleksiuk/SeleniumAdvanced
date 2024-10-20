@@ -41,10 +41,10 @@ namespace SeleniumAdvanced.Pages
         public void SetPassword(string password) => SendKeys(Password, password);
         public void SetBirthdate(string birthdate) => SendKeys(Birthdate, birthdate);
 
-        public void ClickReceiveOffers() => Click(ReceiveOffers);
-        public void ClickDataPrivacy() => Click(DataPrivacy);
-        public void ClickNewsletter() => Click(Newsletter);
-        public void ClickTermsAndConditions() => Click(TermsAndConditions);
-        public void SetSubmit() => Click(Submit);
+        public void CheckReceiveOffersCheckbox() => Click(ReceiveOffers);
+        public void CheckDataPrivacyCheckbox() => Click(DataPrivacy);
+        public void CheckNewsletterCheckbox() => Click(Newsletter);
+        public void CheckClickTermsAndConditionsCheckbox() => Click(TermsAndConditions);
+        public void SubmitForm() => Click(Submit);
     }
 }

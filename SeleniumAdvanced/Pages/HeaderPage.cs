@@ -18,66 +18,31 @@ public class HeaderPage(IWebDriver driver) : BasePage(driver)
 
     private IList<IWebElement> TopMenu => Driver.WaitAndFindAll(By.CssSelector(".top-menu"));
     private IList<IWebElement> TopMenuItems => Driver.WaitAndFindAll(By.CssSelector("#top-menu > li.category"));
-    private IList<IWebElement> TopMenuSubItems => Driver.WaitAndFindAll(By.CssSelector("#top-menu > li.category li.category")).Where(i => i.Displayed).ToList();
+    private IList<IWebElement> TopMenuSubItems =>
+        Driver.WaitAndFindAll(By.CssSelector("#top-menu > li.category li.category")).Where(i => i.Displayed).ToList();
 
     public void SignIn() => Click(SignInBtn);
     public void LogOut() => Click(LogOutBtn);
-    public string GetSignedInText() => ViewCustomerAccountBtn.Text;
+    public string GetSignedInText => ViewCustomerAccountBtn.Text;
     public void ClickSearchWidget() => Click(SearchWidget);
     public void SetSearchText(string SearchText) => SendKeys(SearchWidget, SearchText);
     public void ClickSearchBtn() => Click(SearchBtn);
-    public IEnumerable<string> GetSearchDropdownItemText()
-    {
-        return SearchDropdown.Select(item => item.Text);
-    }
-    public IEnumerable<string> GetTopMenuItemsText()
-    {
-        return TopMenuItems.Select(item => item.Text.Trim());
-    }
+    public IEnumerable<string> GetSearchDropdownItemText => SearchDropdown.Select(item => item.Text);
+    public IEnumerable<string> GetTopMenuItemsText => TopMenuItems.Select(item => item.Text.Trim());
 
-    public void ClickTopMenuItem(string menuItem)
-    {
-        var item = TopMenuItems.FirstOrDefault(i => i.Text.Trim().Equals(menuItem, StringComparison.InvariantCultureIgnoreCase));
-        if (item != null)
-        {
-            Click(item.FindElement(By.CssSelector("a.dropdown-item")));
-        }
-        else
-        {
-            throw new ArgumentException($"Menu item '{menuItem}' not found.", nameof(menuItem));
-        }
-    }
+    public void ClickTopMenuItem(string menuItem) => PerformActionOnMenuItem(TopMenuItems, menuItem, Click);
 
-    public void HoverTopMenuItem(string menuItem)
-    {
-        var item = TopMenuItems.FirstOrDefault(i => i.Text.Trim().Equals(menuItem, StringComparison.InvariantCultureIgnoreCase));
-        if (item != null)
-        {
-            Hover(item.FindElement(By.CssSelector("a.dropdown-item")));
-        }
-        else
-        {
-            throw new ArgumentException($"Menu item '{menuItem}' not found.", nameof(menuItem));
-        }
-    }
+    public void HoverTopMenuItem(string menuItem) => PerformActionOnMenuItem(TopMenuItems, menuItem, Hover);
 
-    public IEnumerable<string> GetTopMenuSubItemsText()
-    {
-        var subElementHtml = TopMenuSubItems[0].GetAttribute("innerHTML");
+    public IEnumerable<string> GetTopMenuSubItemsText() => TopMenuSubItems.Select(item => item.FindElement(By.TagName("a")).Text.Trim());
 
-        return TopMenuSubItems.Select(item => item.FindElement(By.TagName("a")).Text.Trim());
-    }
+    public void ClickTopMenuSubItem(string menuSubItem) => PerformActionOnMenuItem(TopMenuSubItems, menuSubItem, Click);
 
-    public void ClickTopMenuSubItem(string menuSubItem)
+    private void PerformActionOnMenuItem(IEnumerable<IWebElement> menuItems, string menuItem, Action<IWebElement> action)
     {
-        var item = TopMenuSubItems.FirstOrDefault(i => i.Text.Trim().Equals(menuSubItem, StringComparison.InvariantCultureIgnoreCase));
-        if (item != null)
-        {
-            Click(item.FindElement(By.CssSelector("a.dropdown-item")));
-        }
-        else
-        {
-            throw new ArgumentException($"Menu item '{menuSubItem}' not found.", nameof(menuSubItem));
-        }
+        var item = menuItems.FirstOrDefault(i => i.Text.EqualsTrimmedIgnoreCase(menuItem))
+            ?? throw new ArgumentException($"Menu item '{menuItem}' not found.", nameof(menuItem));
+        var element = item.FindElement(By.CssSelector("a.dropdown-item"));
+        action(element);
     }
 }

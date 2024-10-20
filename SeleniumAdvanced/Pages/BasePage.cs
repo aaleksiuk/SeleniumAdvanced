@@ -37,35 +37,40 @@ public abstract class BasePage
         }
         catch (ElementClickInterceptedException e)
         {
-            ActionsDriver.ScrollToElement(element);
-            ActionsDriver.ScrollByAmount(0, 10);
-            Thread.Sleep(500);
-            Driver.GetWait().Until(_ => element.Displayed && element.Enabled);
+            ScrollTo(element);
             element.Click();
             Console.WriteLine(e.ToString());
             throw;
         }
     }
+
     public void Hover(IWebElement element)
     {
         Console.WriteLine($"Hover on: {element.Text}");
         try
         {
-            ActionsDriver.Reset();
-            ActionsDriver.MoveToElement(element);
-            ActionsDriver.Perform();
+            MoveToElementAction(element);
         }
         catch (ElementClickInterceptedException e)
         {
-            ActionsDriver.ScrollToElement(element);
-            ActionsDriver.ScrollByAmount(0, 10);
-            Thread.Sleep(500);
-            Driver.GetWait().Until(_ => element.Displayed && element.Enabled);
-            ActionsDriver.Reset();
-            ActionsDriver.MoveToElement(element);
-            ActionsDriver.Perform();
+            ScrollTo(element);
+            MoveToElementAction(element);
             Console.WriteLine(e.ToString());
             throw;
         }
+    }
+    private void ScrollTo(IWebElement element)
+    {
+        ActionsDriver.ScrollToElement(element);
+        ActionsDriver.ScrollByAmount(0, 10);
+        Thread.Sleep(500);
+        Driver.GetWait().Until(_ => element.Displayed && element.Enabled);
+    }
+
+    private void MoveToElementAction(IWebElement element)
+    {
+        ActionsDriver.Reset();
+        ActionsDriver.MoveToElement(element);
+        ActionsDriver.Perform();
     }
 }

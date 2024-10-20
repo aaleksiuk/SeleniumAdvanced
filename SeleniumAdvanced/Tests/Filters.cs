@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using FluentAssertions.Execution;
 using NUnit.Framework;
+using OpenQA.Selenium;
 using SeleniumAdvanced.Helpers;
 using SeleniumAdvanced.Pages;
 using SeleniumAdvanced.Providers;
@@ -14,10 +15,11 @@ namespace SeleniumAdvanced.Tests;
 public class Filters : TestBase
 {
     [Test]
+    [Repeat(2)]
     public void AccessoriesFilters()
     {
         // Arrange
-        this.driver.Navigate().GoToUrl(UrlProvider.AppUrl);
+        driver.Navigate().GoToUrl(UrlProvider.AppUrl);
 
         //base filter setting
         var basePriceFilterSliderFrom = 11;
@@ -35,10 +37,11 @@ public class Filters : TestBase
 
         GetPage<CategoryPage>(x =>
         {
-            var productsNumber = x.GetDisplayedProductsNumber();
-            x.MoveSliderFrom(basePriceFilterSliderFrom, priceFilterSliderFrom);
+            var productsNumber = x.DisplayedProductsNumber;
+
+            x.MoveSliderFrom(basePriceFilterSliderFrom, priceFilterSliderFrom, priceFilterSliderFrom);
             Thread.Sleep(3000);
-            x.MoveSliderTo(basePriceFilterSliderTo, priceFilterSliderTo);
+            x.MoveSliderTo(basePriceFilterSliderTo, priceFilterSliderTo, priceFilterSliderTo);
             Thread.Sleep(3000);
 
             var productPrices = x.GetProductPrices().ToList();
@@ -49,7 +52,9 @@ public class Filters : TestBase
             {
                 try
                 {
-                    price.Should().BeInRange(priceFilterSliderFrom, priceFilterSliderTo, $"because the product price {price} should be within the filter range {priceFilterSliderFrom} to {priceFilterSliderTo}");
+                    price
+                    .Should()
+                    .BeInRange(priceFilterSliderFrom, priceFilterSliderTo, $"Because the product price {price} should be within the filter range {priceFilterSliderFrom} to {priceFilterSliderTo}");
                 }
                 catch (AssertionFailedException ex)
                 {
@@ -58,11 +63,13 @@ public class Filters : TestBase
             }
 
             // Check for any assertion failures
-            assertionFailures.Should().BeEmpty("All product prices should be within the specified filter range");
+            assertionFailures
+            .Should()
+            .BeEmpty("All product prices should be within the specified filter range");
 
             x.ClearPriceFilter();
             Thread.Sleep(2000);
-            x.GetDisplayedProductsNumber().Should().Be(productsNumber);
+            x.DisplayedProductsNumber.Should().Be(productsNumber);
         });
     }
 }
