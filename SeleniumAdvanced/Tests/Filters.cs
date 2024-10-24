@@ -41,17 +41,18 @@ public class Filters : TestBase
             x.MoveSliderTo(basePriceFilterSliderTo, priceFilterWhereToMoveSliderTo);
             x.WaitForFilterBlockVisible();
 
-            x.DisplayedFilterBlock
-            .Split(new[] { "\r\n", "\n" }, StringSplitOptions.None)
-            .FirstOrDefault()
-            .Trim()
-            .Should()
-            .Be($"Price: ${priceFilterWhereToMoveSliderFrom}.00 - ${priceFilterWhereToMoveSliderTo}.00");
-
-            var productPrices = x.GetProductPrices().ToList();
-
-            using (var scope = new AssertionScope())
+            using (new AssertionScope())
             {
+                x.DisplayedFilterBlock
+                .Split(new[] { "\r\n", "\n" }, StringSplitOptions.None)
+                .FirstOrDefault()
+                .Trim()
+                .Should()
+                .Be($"Price: ${priceFilterWhereToMoveSliderFrom}.00 - ${priceFilterWhereToMoveSliderTo}.00");
+
+                var productPrices = x.GetProductPrices().ToList();
+
+                // Assert product prices
                 foreach (var price in productPrices)
                 {
                     price
@@ -59,11 +60,12 @@ public class Filters : TestBase
                     .BeInRange(priceFilterWhereToMoveSliderFrom, priceFilterWhereToMoveSliderTo,
                     $"Because the product price {price} should be within the filter range {priceFilterWhereToMoveSliderFrom} to {priceFilterWhereToMoveSliderTo}");
                 }
-            }
 
-            x.ClearPriceFilter();
-            x.WaitForFilterBlockToBeHidden().Should().BeTrue();
-            x.DisplayedProductsNumber.Should().Be(productsNumber);
+                // Ensure filter is cleared and state is reset
+                x.ClearPriceFilter();
+                x.WaitForFilterBlockToBeHidden().Should().BeTrue();
+                x.DisplayedProductsNumber.Should().Be(productsNumber);
+            }
         });
     }
 }

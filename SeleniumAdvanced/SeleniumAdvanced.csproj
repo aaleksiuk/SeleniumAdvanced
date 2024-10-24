@@ -95,6 +95,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tests\Filters.cs" />
     <Compile Include="Tests\LogAsAUser.cs" />
+    <Compile Include="Tests\PopularProducts.cs" />
     <Compile Include="Tests\SearchDropdown.cs" />
     <Compile Include="Tests\SearchTest.cs" />
   </ItemGroup>
