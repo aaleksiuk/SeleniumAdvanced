@@ -5,7 +5,6 @@ using SeleniumAdvanced.Helpers;
 using SeleniumAdvanced.Pages;
 using SeleniumAdvanced.Providers;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace SeleniumAdvanced.Tests;
@@ -50,29 +49,17 @@ public class Filters : TestBase
             .Be($"Price: ${priceFilterWhereToMoveSliderFrom}.00 - ${priceFilterWhereToMoveSliderTo}.00");
 
             var productPrices = x.GetProductPrices().ToList();
-            var productPricesStrings = x.GetProductPricesString().ToList();
 
-            // Assert
-            var assertionFailures = new List<string>();
-            foreach (var price in productPrices)
+            using (var scope = new AssertionScope())
             {
-                try
+                foreach (var price in productPrices)
                 {
                     price
                     .Should()
                     .BeInRange(priceFilterWhereToMoveSliderFrom, priceFilterWhereToMoveSliderTo,
                     $"Because the product price {price} should be within the filter range {priceFilterWhereToMoveSliderFrom} to {priceFilterWhereToMoveSliderTo}");
                 }
-                catch (AssertionFailedException ex)
-                {
-                    assertionFailures.Add(ex.Message);
-                }
             }
-
-            // Check for any assertion failures
-            assertionFailures
-            .Should()
-            .BeEmpty("All product prices should be within the specified filter range");
 
             x.ClearPriceFilter();
             x.WaitForFilterBlockToBeHidden().Should().BeTrue();

@@ -110,15 +110,6 @@ public class CategoryPage(IWebDriver driver) : BasePage(driver)
         });
     }
 
-    public IEnumerable<string> GetProductPricesString()
-    {
-        return ProductsPrices.Select(item =>
-        {
-            var priceText = item.Text.Replace("$", "").Trim();
-            return item.Text;
-        });
-    }
-
     public void ClearPriceFilter() => Click(ActiveFilterPriceElementClose);
     public string GetCategoryName => CategoriesTopMenuName.Text;
     public bool FiltersSideMenuDisplayed() => FiltersSideMenu.Displayed;
