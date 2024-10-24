@@ -9,14 +9,16 @@ namespace SeleniumAdvanced.Pages;
 public class CategoryPage(IWebDriver driver) : BasePage(driver)
 {
     private IList<IWebElement> DisplayedProducts => Driver.WaitAndFindAll(By.CssSelector("div.products.row > div"));
+
+    private IWebElement PriceSlider => Driver.WaitAndFind(By.CssSelector("ul.faceted-slider.collapse"));
+    private IWebElement PriceSliderRangeActive => Driver.WaitAndFind(By.CssSelector("ul.faceted-slider.collapse.in"));
+
     private IWebElement PriceSliderFromRange => Driver.WaitAndFind(By.CssSelector("a.ui-slider-handle:nth-of-type(1)"));
     private IWebElement PriceSliderToRange => Driver.WaitAndFind(By.CssSelector("a.ui-slider-handle:nth-of-type(2)"));
-
-    private IWebElement SliderElement => Driver.WaitAndFind(By.CssSelector("ul.faceted-slider.collapse.in"));
-
+    private IWebElement FilterBlock => Driver.WaitAndFind(By.CssSelector("li.filter-block"));
+    private IWebElement FilterBlockHidden => Driver.WaitAndFind(By.CssSelector("#js-active-search-filters.hide"));
 
     private IList<IWebElement> ProductsPrices => Driver.WaitAndFindAll(By.CssSelector("div.product-price-and-shipping"));
-    private IWebElement ActiveFilterPriceElement => Driver.WaitAndFind(By.CssSelector("li.filter-block"));
     private IWebElement ActiveFilterPriceElementClose => Driver.WaitAndFind(By.CssSelector("li.filter-block i.material-icons.close"));
     private IWebElement Breadcrumb => Driver.WaitAndFind(By.CssSelector("#wrapper > div > nav > ol"));
     private IWebElement CategoriesTopMenu => Driver.WaitAndFind(By.CssSelector("div.block-categories > ul"));
@@ -25,61 +27,79 @@ public class CategoryPage(IWebDriver driver) : BasePage(driver)
     private IWebElement FiltersSideMenu => Driver.WaitAndFind(By.CssSelector("#search_filters"));
     private IWebElement Pagination => Driver.WaitAndFind(By.CssSelector("#js-product-list > nav > div.col-md-4"));
 
+    public int BasePriceFilterSliderFrom => int.Parse(PriceSlider.GetAttribute("data-slider-min"));
+    public int BasePriceFilterSliderTo => int.Parse(PriceSlider.GetAttribute("data-slider-max"));
+
     public int DisplayedProductsNumber => DisplayedProducts.Count;
 
-    public void MoveSliderFrom(int currentPosition, int desiredPosition, int expectedMinPrice)
+    public void MoveSliderFrom(int currentPosition, int desiredPosition)
     {
-        MoveSlider(PriceSliderFromRange, currentPosition, desiredPosition);
-        WaitForPriceRangeUpdate(expectedMinPrice, true);
-    }
+        var steps = Math.Abs(desiredPosition - currentPosition);
 
-    public void MoveSliderTo(int currentPosition, int desiredPosition, int expectedMaxPrice)
-    {
-        MoveSlider(PriceSliderToRange, currentPosition, desiredPosition);
-        WaitForPriceRangeUpdate(expectedMaxPrice, false);
-    }
-
-    private void MoveSlider(IWebElement sliderHandle, int currentPosition, int desiredPosition)
-    {
-        int steps = Math.Abs(desiredPosition - currentPosition);
-        var keyToPress = (desiredPosition > currentPosition) ? Keys.ArrowRight : Keys.ArrowLeft;
-
-        for (int i = 0; i < steps; i++)
+        if (steps != 0)
         {
-            sliderHandle.SendKeys(keyToPress);
+            PriceSliderFromRange.SendKeys(Keys.ArrowRight);
+            --steps;
+            currentPosition++;
+
+            WaitForPriceRangeUpdate(currentPosition, true);
+            for (var i = 0; i < steps; i++)
+            {
+                currentPosition++;
+                PriceSliderFromRange.SendKeys(Keys.ArrowRight);
+                WaitForPriceRangeUpdate(currentPosition, true);
+            }
+        }
+    }
+
+    public void MoveSliderTo(int currentPosition, int desiredPosition)
+    {
+        var steps = Math.Abs(desiredPosition - currentPosition);
+
+        if (steps != 0)
+        {
+            PriceSliderToRange.SendKeys(Keys.ArrowLeft);
+            --steps;
+            currentPosition--;
+
+            WaitForPriceRangeUpdate(currentPosition, false);
+
+            for (var i = 0; i < steps; i++)
+            {
+                currentPosition--;
+                PriceSliderToRange.SendKeys(Keys.ArrowLeft);
+                WaitForPriceRangeUpdate(currentPosition, false);
+            }
         }
     }
 
     private void WaitForPriceRangeUpdate(int expectedPrice, bool isMinPrice)
     {
-        WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
+        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
 
-        // Get the data-slider-values attribute
-        var sliderValues = SliderElement.GetAttribute("data-slider-values");
-        var values = ParseSliderValues(sliderValues);
+        wait.Until(d =>
+        {
+            var sliderValues = PriceSliderRangeActive.GetAttribute("data-slider-values");
+            var values = ParseSliderValues(sliderValues);
 
-        // Wait for the appropriate price to be updated
-        if (isMinPrice)
-        {
-            wait.Until(d => values[0] == expectedPrice); // Check for minimum price
-        }
-        else
-        {
-            wait.Until(d => values[1] == expectedPrice); // Check for maximum price
-        }
+            return isMinPrice ? values[0] == expectedPrice : values[1] == expectedPrice;
+        });
     }
 
     private int[] ParseSliderValues(string sliderValues)
     {
-        // Clean and parse the slider values from the attribute
-        var cleanedInput = sliderValues.TrimStart('[').TrimEnd(']').Replace("\"", "");
+        var cleanedValues = sliderValues.Replace("[", "")
+                                            .Replace("]", "")
+                                            .Replace("\"", "");
 
-        return cleanedInput
-            .Split(',')
-            .Select(int.Parse) // Convert to integers
-            .ToArray();
+        var parts = cleanedValues.Split(',');
+
+        return parts.Select(part => int.Parse(part.Trim())).ToArray();
     }
 
+    public string DisplayedFilterBlock => FilterBlock.Text;
+
+    public void WaitForFilterBlockVisible() => Driver.IsDisplayedWithTimeout(By.CssSelector("li.filter-block"));
 
     public IEnumerable<decimal> GetProductPrices()
     {
@@ -89,9 +109,19 @@ public class CategoryPage(IWebDriver driver) : BasePage(driver)
             return decimal.Parse(priceText);
         });
     }
-    public bool IsPriceFilterDisplayed(string priceRange) => ActiveFilterPriceElement.Text.Contains(priceRange);
+
+    public IEnumerable<string> GetProductPricesString()
+    {
+        return ProductsPrices.Select(item =>
+        {
+            var priceText = item.Text.Replace("$", "").Trim();
+            return item.Text;
+        });
+    }
+
     public void ClearPriceFilter() => Click(ActiveFilterPriceElementClose);
     public string GetCategoryName => CategoriesTopMenuName.Text;
     public bool FiltersSideMenuDisplayed() => FiltersSideMenu.Displayed;
+    public bool WaitForFilterBlockToBeHidden() => FilterBlockHidden.Displayed;
     public string PaginationText => Pagination.Text;
 }
