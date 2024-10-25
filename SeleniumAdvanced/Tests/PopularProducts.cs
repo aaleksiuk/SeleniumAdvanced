@@ -4,7 +4,6 @@ using NUnit.Framework;
 using SeleniumAdvanced.Helpers;
 using SeleniumAdvanced.Pages;
 using SeleniumAdvanced.Providers;
-using System;
 using System.Linq;
 
 namespace SeleniumAdvanced.Tests;
@@ -18,5 +17,19 @@ public class PopularProducts : TestBase
     {
         // Arrange
         driver.Navigate().GoToUrl(UrlProvider.AppUrl);
+
+        // Act
+        GetPage<StartPage>(x =>
+        {
+            var popularProductsNames = x.GetProductsNames().ToList();
+            using (new AssertionScope())
+            {
+                popularProductsNames.Should().NotBeEmpty("There should be at least one popular product on the list");
+
+                popularProductsNames
+                    .Should()
+                    .AllSatisfy(name => name.Should().NotBeNullOrEmpty("Each product should have name"));
+            }
+        });
     }
 }
