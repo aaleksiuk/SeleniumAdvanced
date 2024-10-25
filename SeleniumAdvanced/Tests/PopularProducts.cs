@@ -22,6 +22,7 @@ public class PopularProducts : TestBase
         GetPage<StartPage>(x =>
         {
             var popularProductsNames = x.GetProductsNames().ToList();
+            var popularProductsPrices = x.GetProductPrices().ToList();
             using (new AssertionScope())
             {
                 popularProductsNames.Should().NotBeEmpty("There should be at least one popular product on the list");
@@ -29,6 +30,10 @@ public class PopularProducts : TestBase
                 popularProductsNames
                     .Should()
                     .AllSatisfy(name => name.Should().NotBeNullOrEmpty("Each product should have name"));
+
+                popularProductsPrices
+                    .Should()
+                    .AllSatisfy(price => price.Should().BeGreaterThan(0, "Each product price should be > 0"));
             }
         });
     }
