@@ -20,8 +20,10 @@ public class Filters : TestBase
         driver.Navigate().GoToUrl(UrlProvider.AppUrl);
 
         //new filter settings
-        var priceFilterWhereToMoveSliderFrom = 13;
-        var priceFilterWhereToMoveSliderTo = 15;
+        const int PRICE_FILTER_TO_MOVE_SLIDER_FROM = 13;
+        const int PRICE_FILTER_TO_MOVE_SLIDER_TO = 15;
+
+        var productsNumber = 0;
 
         // Act
         GetPage<HeaderPage>(x =>
@@ -29,16 +31,21 @@ public class Filters : TestBase
             x.ClickTopMenuItem("Accessories");
         });
 
+        GetPage<ProductsGridPage>(x =>
+        {
+            productsNumber = x.DisplayedProductsNumber;
+        });
+
         GetPage<CategoryPage>(x =>
         {
-            var productsNumber = x.DisplayedProductsNumber;
+
             var basePriceFilterSliderFrom = x.BasePriceFilterSliderFrom;
             var basePriceFilterSliderTo = x.BasePriceFilterSliderTo;
 
-            x.MoveSliderFrom(basePriceFilterSliderFrom, priceFilterWhereToMoveSliderFrom);
+            x.MoveSliderFrom(basePriceFilterSliderFrom, PRICE_FILTER_TO_MOVE_SLIDER_FROM);
             x.WaitForFilterBlockVisible();
 
-            x.MoveSliderTo(basePriceFilterSliderTo, priceFilterWhereToMoveSliderTo);
+            x.MoveSliderTo(basePriceFilterSliderTo, PRICE_FILTER_TO_MOVE_SLIDER_TO);
             x.WaitForFilterBlockVisible();
 
             using (new AssertionScope())
@@ -48,24 +55,34 @@ public class Filters : TestBase
                 .FirstOrDefault()
                 .Trim()
                 .Should()
-                .Be($"Price: ${priceFilterWhereToMoveSliderFrom}.00 - ${priceFilterWhereToMoveSliderTo}.00");
-
-                var productPrices = x.GetProductPrices().ToList();
-
-                // Assert product prices
-                foreach (var price in productPrices)
-                {
-                    price
-                    .Should()
-                    .BeInRange(priceFilterWhereToMoveSliderFrom, priceFilterWhereToMoveSliderTo,
-                    $"Because the product price {price} should be within the filter range {priceFilterWhereToMoveSliderFrom} to {priceFilterWhereToMoveSliderTo}");
-                }
-
-                // Ensure filter is cleared and state is reset
-                x.ClearPriceFilter();
-                x.WaitForFilterBlockToBeHidden().Should().BeTrue();
-                x.DisplayedProductsNumber.Should().Be(productsNumber);
+                .Be($"Price: ${PRICE_FILTER_TO_MOVE_SLIDER_FROM}.00 - ${PRICE_FILTER_TO_MOVE_SLIDER_TO}.00");
             }
+        });
+
+        GetPage<ProductsGridPage>(x =>
+        {
+            var productPrices = x.GetProductPrices().ToList();
+
+            // Assert product prices
+            foreach (var price in productPrices)
+            {
+                price
+                .Should()
+                .BeInRange(PRICE_FILTER_TO_MOVE_SLIDER_FROM, PRICE_FILTER_TO_MOVE_SLIDER_TO,
+                $"Because the product price {price} should be within the filter range {PRICE_FILTER_TO_MOVE_SLIDER_FROM} to {PRICE_FILTER_TO_MOVE_SLIDER_TO}");
+            }
+        });
+
+        GetPage<CategoryPage>(x =>
+        {
+            // Ensure filter is cleared and state is reset
+            x.ClearPriceFilter();
+            x.WaitForFilterBlockToBeHidden().Should().BeTrue();
+        });
+
+        GetPage<ProductsGridPage>(x =>
+        {
+            x.DisplayedProductsNumber.Should().Be(productsNumber);
         });
     }
 }

@@ -19,10 +19,10 @@ public class PopularProducts : TestBase
         driver.Navigate().GoToUrl(UrlProvider.AppUrl);
 
         // Act
-        GetPage<StartPage>(x =>
+        GetPage<ProductsGridPage>(x =>
         {
             var popularProductsNames = x.GetProductsNames().ToList();
-            var popularProductsPrices = x.GetProductPrices().ToList();
+            var popularProductsPrices = x.GetProductPricesRegularAndDiscount().ToList();
             using (new AssertionScope())
             {
                 popularProductsNames.Should().NotBeEmpty("There should be at least one popular product on the list");

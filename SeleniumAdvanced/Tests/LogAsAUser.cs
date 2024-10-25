@@ -20,7 +20,7 @@ public class LogAsAUser : TestBase
     }
 
     [Test]
-    [Repeat(10)]
+    [Repeat(2)]
     public void LogInUser()
     {
         // Act

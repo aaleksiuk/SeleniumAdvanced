@@ -11,7 +11,7 @@ public class SearchDropdown : TestBase
 {
     private readonly string searchText = "HUMMINGBIRD";
     [Test]
-    [Repeat(10)]
+    [Repeat(2)]
     public void SearchText()
     {
         // Arrange

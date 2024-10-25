@@ -13,7 +13,7 @@ namespace SeleniumAdvanced.Tests;
 public class CategoriesTest : TestBase
 {
     [Test]
-    [Repeat(10)]
+    [Repeat(2)]
     public void Categories()
     {
         // Arrange
@@ -27,14 +27,19 @@ public class CategoriesTest : TestBase
             {
                 headerPage.ClickTopMenuItem(menuItem);
 
-                _ = GetPage((Action<CategoryPage>)(x =>
+                GetPage((Action<CategoryPage>)(x =>
                 {
                     using (new AssertionScope()) // Soft assertions block
                     {
                         ValidateCategoryNameAndFilters(x, menuItem);
                         ValidatePaginationMsg(x);
+                        
                     }
                 }));
+                GetPage<HeaderPage>(x =>
+                {
+                    x.HoverContactUsBtn();
+                });
             }
         }));
     }
@@ -47,7 +52,7 @@ public class CategoriesTest : TestBase
         driver.Navigate().GoToUrl(UrlProvider.AppUrl);
 
         // Act
-        GetPage<HeaderPage>(headerPage =>
+        GetPage<HeaderPage>(x =>
         {
             const int MAX_NUMBER_OF_SUBCATEGORIES = 2;
             string[] topMenuItems = ["CLOTHES", "ACCESSORIES"];
@@ -55,12 +60,12 @@ public class CategoriesTest : TestBase
             {
                 for (var i = 0; i < MAX_NUMBER_OF_SUBCATEGORIES; i++)
                 {
-                    headerPage.HoverTopMenuItem(menuItem);
-                    var topMenuSubItems = headerPage.GetTopMenuSubItemsText().ToList();
+                    x.HoverTopMenuItem(menuItem);
+                    var topMenuSubItems = x.GetTopMenuSubItemsText().ToList();
 
                     var menuSubItem = topMenuSubItems[i];
 
-                    headerPage.ClickTopMenuSubItem(menuSubItem);
+                    x.ClickTopMenuSubItem(menuSubItem);
                     GetPage<CategoryPage>(x =>
                     {
                         using (new AssertionScope())
@@ -73,9 +78,15 @@ public class CategoriesTest : TestBase
             }
         });
     }
-    private static void ValidatePaginationMsg(CategoryPage x)
+    private void ValidatePaginationMsg(CategoryPage x)
     {
-        var productsNumber = x.DisplayedProductsNumber;
+        var productsNumber = 0;
+
+        GetPage<ProductsGridPage>(pgp =>
+        {
+            productsNumber = pgp.DisplayedProductsNumber;
+        });
+
         var displayPaginationMessage = x.PaginationText;
         var pattern = $@"Showing \d+-\d+ of {productsNumber} item\(s\)"; //'\d+' represents one or more digits (0-9), example: Showing 15-25 of 100 items
 

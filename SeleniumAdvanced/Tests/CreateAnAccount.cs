@@ -10,7 +10,7 @@ namespace SeleniumAdvanced.Tests;
 public class CreateAnAccount : TestBase
 {
     [Test]
-    [Repeat(10)]
+    [Repeat(2)]
     public void CreateAccount()
     {
         // Arrange

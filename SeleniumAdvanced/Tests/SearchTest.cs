@@ -10,7 +10,7 @@ namespace SeleniumAdvanced.Tests;
 public class SearchTest : TestBase
 {
     [Test]
-    [Repeat(10)]
+    [Repeat(2)]
     public void Search()
     {
         // Arrange

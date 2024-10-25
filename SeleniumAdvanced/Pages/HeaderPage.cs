@@ -1,8 +1,10 @@
 ﻿using OpenQA.Selenium;
+using OpenQA.Selenium.Interactions;
 using SeleniumAdvanced.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Linq;
 
 namespace SeleniumAdvanced.Pages;
 
@@ -11,6 +13,7 @@ public class HeaderPage(IWebDriver driver) : BasePage(driver)
     private IWebElement SignInBtn => Driver.WaitAndFind(By.CssSelector(".user-info"));
     private IWebElement LogOutBtn => Driver.WaitAndFind(By.CssSelector("a.logout"));
     private IWebElement ViewCustomerAccountBtn => Driver.WaitAndFind(By.CssSelector("span.hidden-sm-down"));
+    private IWebElement ContactUsBtn => Driver.WaitAndFind(By.CssSelector("#contact-link"));
 
     private IWebElement SearchWidget => Driver.WaitAndFind(By.CssSelector(".search-widget input[name='s']"));
     private IWebElement SearchBtn => Driver.WaitAndFind(By.CssSelector("#search_widget > form > button"));
@@ -33,6 +36,8 @@ public class HeaderPage(IWebDriver driver) : BasePage(driver)
     public void ClickTopMenuItem(string menuItem) => PerformActionOnMenuItem(TopMenuItems, menuItem, Click);
 
     public void HoverTopMenuItem(string menuItem) => PerformActionOnMenuItem(TopMenuItems, menuItem, Hover);
+
+    public void HoverContactUsBtn() => Hover(ContactUsBtn);
 
     public IEnumerable<string> GetTopMenuSubItemsText() => TopMenuSubItems.Select(item => item.FindElement(By.TagName("a")).Text.Trim());
 
