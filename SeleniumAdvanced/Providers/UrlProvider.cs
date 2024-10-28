@@ -1,9 +1,9 @@
-﻿namespace SeleniumAdvanced.Providers
+﻿namespace SeleniumAdvanced.Providers;
+
+public static class UrlProvider
 {
-    public class UrlProvider(string BaseUrl)
-    {
-        public string AppUrl => BaseUrl;
-        public string RegistartionUrl => $"{BaseUrl}?controller=authentication&create_account=1";
-        public string SignInUrl => $"{BaseUrl}?controller=authentication&back=my-account";
-    }
+    private static string BaseUrl => Helpers.Configuration.Instance.BaseUrl;
+    public static string AppUrl => BaseUrl;
+    public static string RegistrationUrl => $"{BaseUrl}?controller=authentication&create_account=1";
+    public static string SignInUrl => $"{BaseUrl}?controller=authentication&back=my-account";
 }

@@ -1,54 +1,26 @@
 ﻿using FluentAssertions;
+using NUnit.Framework;
 using SeleniumAdvanced.Helpers;
 using SeleniumAdvanced.Pages;
-using SeleniumAdvanced.Providers;
-using Xunit;
-using Xunit.Abstractions;
+using static SeleniumAdvanced.Helpers.CreateAccountHelper;
 
-namespace SeleniumAdvanced
+namespace SeleniumAdvanced.Tests;
+
+[TestFixture]
+public class CreateAnAccount : TestBase
 {
-    public class CreateAnAccount : TestBase
+    [Test]
+    [Repeat(2)]
+    public void CreateAccount()
     {
-        public CreateAnAccount(ITestOutputHelper output) : base(output)
+        // Arrange
+        var personService = new CreateAccountService(driver);
+
+        //Assert
+        GetPage<HeaderPage>(x =>
         {
-
-        }
-        [Fact]
-        public void CreateAccount()
-        {
-            this.driver.Navigate().GoToUrl(UrlProvider.AppUrl);
-            var person = new PersonGenerator();
-
-            GetPage<HeaderPage>(x =>
-            {
-                x.SignIn();
-            });
-
-            GetPage<SignInPage>(x =>
-            {
-                x.CreateAccount();
-            });
-
-            GetPage<CreateAccountPage>(x =>
-            {
-                x.SetSocialTitle(person.Title);
-                x.SetFirstName(person.FirstName);
-                x.SetLastName(person.LastName);
-                x.SetEmail(person.Mail);
-                x.SetPassword(person.Password);
-                x.SetBirthdate(person.BirthDate);
-                x.SetReceiveOffers(true);
-                x.SetDataPrivacy(true);
-                x.SetNewsletter(true);
-                x.SetTermsAndConditions(true);
-                x.SetSubmit();
-            });
-
-            GetPage<HeaderPage>(x =>
-            {
-                x.IsSignedIn().Should().Be($"{person.FullName}");
-            });
-        }
+            var person = personService.CreateNewAccount();
+            x.GetSignedInText.Should().Be($"{person.FullName}");
+        });
     }
 }
-

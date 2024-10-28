@@ -2,48 +2,75 @@
 using OpenQA.Selenium.Interactions;
 using SeleniumAdvanced.Extensions;
 using System;
+using System.Threading;
 
-namespace SeleniumAdvanced.Pages
+namespace SeleniumAdvanced.Pages;
+
+public abstract class BasePage
 {
-    public abstract class BasePage
+    public IWebDriver Driver { get; }
+    public Actions ActionsDriver { get; }
+
+    protected BasePage(IWebDriver driver)
     {
-        public IWebDriver Driver { get; }
-        public Actions ActionsDriver { get; }
+        Driver = driver;
+        ActionsDriver = new Actions(Driver);
+    }
 
-        protected BasePage(IWebDriver driver)
-        {
-            Driver = driver;
-            ActionsDriver = new Actions(Driver);
-        }
-
-        public void SendKeys(IWebElement element, string text)
-        {
-            Console.WriteLine($"Typing: {text}");
-            element.SendKeys(text);
-        }
-
-        public void ClearAndSendKeys(IWebElement element, string text)
+    public void SendKeys(IWebElement element, string text, bool clear = true)
+    {
+        if (clear)
         {
             element.Clear();
-            SendKeys(element, text);
-        }
 
-        public void Click(IWebElement element)
-        {
-            Console.WriteLine($"Clicking: {element.Text}");
-            try
-            {
-                element.Click();
-            }
-            catch (ElementClickInterceptedException e)
-            {
-                ActionsDriver.ScrollToElement(element);
-                ActionsDriver.ScrollByAmount(0, 10);
-                Driver.DefaultWait().Until(_ => element.Displayed && element.Enabled);
-                element.Click();
-                Console.WriteLine(e.ToString());
-                throw;
-            }
         }
+        Console.WriteLine($"Typing: {text}");
+        element.SendKeys(text);
+    }
+
+    public void Click(IWebElement element)
+    {
+        Console.WriteLine($"Clicking: {element.Text}");
+        try
+        {
+            element.Click();
+        }
+        catch (ElementClickInterceptedException e)
+        {
+            ScrollTo(element);
+            element.Click();
+            Console.WriteLine(e.ToString());
+            throw;
+        }
+    }
+
+    public void Hover(IWebElement element)
+    {
+        Console.WriteLine($"Hover on: {element.Text}");
+        try
+        {
+            MoveToElementAction(element);
+        }
+        catch (ElementClickInterceptedException e)
+        {
+            ScrollTo(element);
+            MoveToElementAction(element);
+            Console.WriteLine(e.ToString());
+            throw;
+        }
+    }
+    private void ScrollTo(IWebElement element)
+    {
+        ActionsDriver.ScrollToElement(element);
+        ActionsDriver.ScrollByAmount(0, 10);
+        Thread.Sleep(500);
+        Driver.GetWait().Until(_ => element.Displayed && element.Enabled);
+    }
+
+    private void MoveToElementAction(IWebElement element)
+    {
+        ActionsDriver.Reset();
+        ActionsDriver.MoveToElement(element);
+        ActionsDriver.Perform();
     }
 }

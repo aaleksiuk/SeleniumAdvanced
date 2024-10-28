@@ -1,10 +1,8 @@
-﻿namespace SeleniumAdvanced.Enums
+﻿namespace SeleniumAdvanced.Enums;
+
+public enum Browsers
 {
-    public enum Browsers
-    {
-        Chrome,
-        Firefox,
-        IE,
-        Edge
-    }
+    Chrome,
+    Firefox,
+    Edge
 }
