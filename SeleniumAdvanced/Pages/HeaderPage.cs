@@ -1,10 +1,8 @@
 ﻿using OpenQA.Selenium;
-using OpenQA.Selenium.Interactions;
 using SeleniumAdvanced.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Xml.Linq;
 
 namespace SeleniumAdvanced.Pages;
 
@@ -24,6 +22,10 @@ public class HeaderPage(IWebDriver driver) : BasePage(driver)
     private IList<IWebElement> TopMenuSubItems =>
         Driver.WaitAndFindAll(By.CssSelector("#top-menu > li.category li.category")).Where(i => i.Displayed).ToList();
 
+    private IWebElement CategoriesTopMenu => Driver.WaitAndFind(By.CssSelector("div.block-categories > ul"));
+    private IWebElement CategoriesTopMenuName => Driver.WaitAndFind(By.CssSelector("div.block-categories > ul > li:nth-child(1)"));
+    private IWebElement SubCategoriesTopMenuNames => Driver.WaitAndFind(By.CssSelector("div.block-categories > ul > li:nth-child(2)"));
+
     public void SignIn() => Click(SignInBtn);
     public void LogOut() => Click(LogOutBtn);
     public string GetSignedInText => ViewCustomerAccountBtn.Text;
@@ -33,6 +35,7 @@ public class HeaderPage(IWebDriver driver) : BasePage(driver)
     public IEnumerable<string> GetSearchDropdownItemText => SearchDropdown.Select(item => item.Text);
     public IEnumerable<string> GetTopMenuItemsText => TopMenuItems.Select(item => item.Text.Trim());
 
+    public string GetCategoryName => CategoriesTopMenuName.Text;
     public void ClickTopMenuItem(string menuItem) => PerformActionOnMenuItem(TopMenuItems, menuItem, Click);
 
     public void HoverTopMenuItem(string menuItem) => PerformActionOnMenuItem(TopMenuItems, menuItem, Hover);

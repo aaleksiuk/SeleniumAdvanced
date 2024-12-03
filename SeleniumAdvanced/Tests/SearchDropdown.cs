@@ -15,19 +15,13 @@ public class SearchDropdown : TestBase
     public void SearchText()
     {
         // Arrange
-        driver.Navigate().GoToUrl(UrlProvider.AppUrl);
+        Driver.Navigate().GoToUrl(UrlProvider.AppUrl);
 
         // Act
-        GetPage<HeaderPage>(x =>
-        {
-            x.SetSearchText(searchText);
-        });
+        GetPage<HeaderPage>().SetSearchText(searchText);
 
         //Assert
-        GetPage<HeaderPage>(x =>
-        {
-            x.GetSearchDropdownItemText.Should().AllSatisfy(ContainsText);
-        });
+        GetPage<HeaderPage>().GetSearchDropdownItemText.Should().AllSatisfy(ContainsText);
     }
     private void ContainsText(string text)
     {

@@ -7,34 +7,26 @@ namespace SeleniumAdvanced.Pages;
 
 public class ProductsGridPage(IWebDriver driver) : BasePage(driver)
 {
-    private IList<IWebElement> DisplayedProducts => Driver.WaitAndFindAll(By.CssSelector("div.products.row > div"));
-    private IList<IWebElement> PopularProductsName => Driver.WaitAndFindAll(By.CssSelector("h3.product-title > a"));
-    private IList<IWebElement> ProductsPrices => Driver.WaitAndFindAll(By.CssSelector("div.product-price-and-shipping"));
-    private IList<IWebElement> ProductsPricesRegularAndDiscount => Driver.WaitAndFindAll(By.CssSelector(".product-price-and-shipping .regular-price, .product-price-and-shipping .price"));
+    public IList<ProductMiniaturePage> ProductsMiniatures =>
+        Driver.WaitAndFindAll(By.CssSelector(".product-miniature"))
+            .Select(item => new ProductMiniaturePage(item, Driver))
+            .ToList();
 
-    public int DisplayedProductsNumber => DisplayedProducts.Count;
-    public IEnumerable<string> GetProductsNames()
-    {
-        return PopularProductsName.Select(item =>
-        {
-            return item.Text;
-        });
-    }
+    public int DisplayedProductsNumber => ProductsMiniatures.Count;
 
-    public IEnumerable<decimal> GetProductPrices()
-    {
-        return ProductsPrices.Select(item =>
+    //public string GetProductTitle => ProductTitle.Text;
+
+    public IEnumerable<string> GetProductsNames() => ProductsMiniatures.Select(item => item.Name);
+
+    public IEnumerable<decimal> GetProductPrices() => ProductsMiniatures.Select(item =>
         {
-            var priceText = item.Text.Replace("$", "").Trim();
+            var priceText = item.Price.Replace("$", "").Trim();
             return decimal.Parse(priceText);
         });
-    }
-    public IEnumerable<decimal> GetProductPricesRegularAndDiscount()
-    {
-        return ProductsPricesRegularAndDiscount.Select(item =>
+
+    public IEnumerable<decimal> GetProductPricesRegularAndDiscount() => ProductsMiniatures.Select(item =>
         {
-            var priceText = item.Text.Replace("$", "").Trim();
-            return decimal.Parse(priceText);
+            var cleanedPriceText = item.DiscountPrice.Replace("$", "").Trim();
+            return decimal.Parse(cleanedPriceText);
         });
-    }
 }

@@ -16,7 +16,7 @@ public class PopularProducts : TestBase
     public void PopularProductsNames()
     {
         // Arrange
-        driver.Navigate().GoToUrl(UrlProvider.AppUrl);
+        Driver.Navigate().GoToUrl(UrlProvider.AppUrl);
 
         // Act
         GetPage<ProductsGridPage>(x =>

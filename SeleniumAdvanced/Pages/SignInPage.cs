@@ -11,7 +11,7 @@ public class SignInPage(IWebDriver driver) : BasePage(driver)
     private IWebElement SignIn => Driver.WaitAndFind(By.CssSelector("#submit-login"));
 
     public void CreateAccount() => Click(CreateAccountLink);
-    public void EnterEmail(string Mail) => SendKeys(EmailInput, Mail);
-    public void EnterPassword(string Password) => SendKeys(PasswordInput, Password);
+    public void EnterEmail(string mail) => SendKeys(EmailInput, mail);
+    public void EnterPassword(string password) => SendKeys(PasswordInput, password);
     public void SubmitLogin() => Click(SignIn);
 }

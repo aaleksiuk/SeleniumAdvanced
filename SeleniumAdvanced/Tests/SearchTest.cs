@@ -15,7 +15,7 @@ public class SearchTest : TestBase
     {
         // Arrange
         var searchText = "MUG THE BEST";
-        driver.Navigate().GoToUrl(UrlProvider.AppUrl);
+        Driver.Navigate().GoToUrl(UrlProvider.AppUrl);
 
         // Act
         GetPage<HeaderPage>(x =>
@@ -25,9 +25,9 @@ public class SearchTest : TestBase
         });
 
         //Assert
-        GetPage<SearchResultPage>(x =>
+        GetPage<ProductsGridPage>(x =>
         {
-            x.GetProductTitle.Should().Be(searchText);
+            x.GetProductsNames().Should().Contain(searchText);
         });
     }
 }

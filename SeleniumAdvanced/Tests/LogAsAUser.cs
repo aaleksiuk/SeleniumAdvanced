@@ -15,7 +15,7 @@ public class LogAsAUser : TestBase
     public new void Setup()
     {
         // Use the service to create an account
-        var personService = new CreateAccountService(driver);
+        var personService = new CreateAccountService(Driver);
         _userToLogIn = personService.CreateNewAccount();
     }
 

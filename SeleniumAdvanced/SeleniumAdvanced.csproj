@@ -87,7 +87,7 @@
     <Compile Include="Pages\CreateAccountPage.cs" />
     <Compile Include="Pages\HeaderPage.cs" />
     <Compile Include="Pages\ProductsGridPage.cs" />
-    <Compile Include="Pages\SearchResultPage.cs" />
+    <Compile Include="Pages\ProductMiniaturePage.cs" />
     <Compile Include="Pages\SignInPage.cs" />
     <Compile Include="Providers\DriverProvider.cs" />
     <Compile Include="Providers\UrlProvider.cs" />
