@@ -14,8 +14,8 @@ public class CategoryPage(IWebDriver driver) : BasePage(driver)
     private IWebElement PriceSliderFromRange => Driver.WaitAndFind(By.CssSelector("a.ui-slider-handle:nth-of-type(1)"));
     private IWebElement PriceSliderToRange => Driver.WaitAndFind(By.CssSelector("a.ui-slider-handle:nth-of-type(2)"));
 
-    private By PriceSliderFromRangeSelector => By.CssSelector("a.ui-slider-handle:nth-of-type(1)");
-    private By PriceSliderToRangeSelector => By.CssSelector("a.ui-slider-handle:nth-of-type(2)");
+    private static By PriceSliderFromRangeSelector => By.CssSelector("a.ui-slider-handle:nth-of-type(1)");
+    private static By PriceSliderToRangeSelector => By.CssSelector("a.ui-slider-handle:nth-of-type(2)");
 
     private IWebElement FilterBlock => Driver.WaitAndFind(By.CssSelector("li.filter-block"));
     private IWebElement FilterBlockHidden => Driver.WaitAndFind(By.CssSelector("#js-active-search-filters.hide"));
@@ -26,8 +26,8 @@ public class CategoryPage(IWebDriver driver) : BasePage(driver)
     private IWebElement FiltersSideMenu => Driver.WaitAndFind(By.CssSelector("#search_filters"));
     private IWebElement Pagination => Driver.WaitAndFind(By.CssSelector("#js-product-list > nav > div.col-md-4"));
 
-    public int BasePriceFilterSliderFrom => int.Parse(PriceSlider.GetAttribute("data-slider-min"));
-    public int BasePriceFilterSliderTo => int.Parse(PriceSlider.GetAttribute("data-slider-max"));
+    public int BasePriceFilterSliderFrom => int.Parse(PriceSlider.GetDomAttribute("data-slider-min"));
+    public int BasePriceFilterSliderTo => int.Parse(PriceSlider.GetDomAttribute("data-slider-max"));
 
     public void MoveSliderFrom(int currentPosition, int desiredPosition)
     {
@@ -59,12 +59,12 @@ public class CategoryPage(IWebDriver driver) : BasePage(driver)
     {
         new WebDriverWait(driver, TimeSpan.FromSeconds(10)).Until(d =>
         {
-            var sliderValues = PriceSliderRangeActive.GetAttribute("data-slider-values");
+            var sliderValues = PriceSliderRangeActive.GetDomAttribute("data-slider-values");
             var values = ParseSliderValues(sliderValues);
             return values.Any(c => c.Equals(expectedPrice));
         });
     }
-    private int[] ParseSliderValues(string sliderValues)
+    private static int[] ParseSliderValues(string sliderValues)
     {
         var cleanedValues = sliderValues.Replace("[", "")
                                             .Replace("]", "")

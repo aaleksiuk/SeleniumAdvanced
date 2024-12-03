@@ -46,7 +46,7 @@ public class HeaderPage(IWebDriver driver) : BasePage(driver)
 
     public void ClickTopMenuSubItem(string menuSubItem) => PerformActionOnMenuItem(TopMenuSubItems, menuSubItem, Click);
 
-    private void PerformActionOnMenuItem(IEnumerable<IWebElement> menuItems, string menuItem, Action<IWebElement> action)
+    private static void PerformActionOnMenuItem(IEnumerable<IWebElement> menuItems, string menuItem, Action<IWebElement> action)
     {
         var item = menuItems.FirstOrDefault(i => i.Text.EqualsTrimmedIgnoreCase(menuItem))
             ?? throw new ArgumentException($"Menu item '{menuItem}' not found.", nameof(menuItem));

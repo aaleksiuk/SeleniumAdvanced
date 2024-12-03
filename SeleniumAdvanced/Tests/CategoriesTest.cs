@@ -92,6 +92,7 @@ public class CategoriesTest : TestBase
 
         displayPaginationMessage.Should().MatchRegex(pattern);
     }
+
     private static void ValidateCategoryNameAndFilters(CategoryPage x, string menuItem)
     {
         var categoryName = x.Header.GetCategoryName;

@@ -31,7 +31,6 @@ public class Filters : TestBase
             x.ClickTopMenuItem("Accessories");
         });
 
-
         GetPage<CategoryPage>(x =>
         {
             productsNumber = x.ProductsGridPage.DisplayedProductsNumber;

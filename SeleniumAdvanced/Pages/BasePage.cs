@@ -17,7 +17,7 @@ public abstract class BasePage
         Driver = driver;
         ActionsDriver = new Actions(Driver);
     }
-    public void SendKeys(IWebElement element, string text, bool clear = true)
+    public static void SendKeys(IWebElement element, string text, bool clear = true)
     {
         if (clear)
         {

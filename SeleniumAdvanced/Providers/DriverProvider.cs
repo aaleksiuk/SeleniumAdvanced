@@ -19,7 +19,7 @@ internal class DriverProvider
             _ => throw new ArgumentException($"Unsupported browser: {browser}")
         };
     }
-    private IWebDriver InitializeChromeDriver()
+    private static IWebDriver InitializeChromeDriver()
     {
         var options = new ChromeOptions();
         options.AddArgument("start-maximized");
@@ -36,14 +36,14 @@ internal class DriverProvider
         return new ChromeDriver(options);
     }
 
-    private IWebDriver InitializeFirefoxDriver()
+    private static IWebDriver InitializeFirefoxDriver()
     {
         var options = new FirefoxOptions();
         options.AddArgument("--start-maximized");
         return new FirefoxDriver(options);
     }
 
-    private IWebDriver InitializeEdgeDriver()
+    private static IWebDriver InitializeEdgeDriver()
     {
         var options = new EdgeOptions();
         options.AddArgument("start-maximized");
