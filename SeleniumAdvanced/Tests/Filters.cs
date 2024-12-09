@@ -52,7 +52,7 @@ public class Filters : TestBase
                 .Should()
                 .Be($"Price: ${PRICE_FILTER_TO_MOVE_SLIDER_FROM}.00 - ${PRICE_FILTER_TO_MOVE_SLIDER_TO}.00");
             }
-            var productPrices = x.ProductsGridPage.GetProductPrices().ToList();
+            var productPrices = x.ProductsGridPage.GetProductPrices.ToList();
 
             // Assert product prices
             foreach (var price in productPrices)

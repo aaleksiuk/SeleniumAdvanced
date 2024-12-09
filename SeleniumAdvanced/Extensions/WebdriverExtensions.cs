@@ -43,15 +43,18 @@ public static class WebDriverExtensions
     }
     public static IWebElement WaitAndFind(this IWebDriver driver, By by)
     {
-        try
+        return driver.GetWait().Until(d =>
         {
-            return driver.GetWait().Until(d =>
-            d.FindElement(by).Displayed ? d.FindElement(by) : throw new NoSuchElementException($"Element with locator '{by}' was not found"));
-        }
-        catch (NoSuchElementException)
-        {
-            throw new NoSuchElementException($"Element with locator '{by}' was not found within the specified timeout.");
-        }
+            var element = d.FindElement(by);
+            if (element.Displayed)
+            {
+                return element;
+            }
+            else
+            {
+                throw new NoSuchElementException($"Element with locator '{by}' was not found.");
+            }
+        });
     }
 
     public static List<IWebElement> WaitAndFindAll(this IWebDriver driver, By by)

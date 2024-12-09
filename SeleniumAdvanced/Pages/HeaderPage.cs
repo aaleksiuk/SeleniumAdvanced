@@ -30,7 +30,7 @@ public class HeaderPage(IWebDriver driver) : BasePage(driver)
     public void LogOut() => Click(LogOutBtn);
     public string GetSignedInText => ViewCustomerAccountBtn.Text;
     public void ClickSearchWidget() => Click(SearchWidget);
-    public void SetSearchText(string SearchText) => SendKeys(SearchWidget, SearchText);
+    public void SetSearchText(string searchText) => SendKeys(SearchWidget, searchText);
     public void ClickSearchBtn() => Click(SearchBtn);
     public IEnumerable<string> GetSearchDropdownItemText => SearchDropdown.Select(item => item.Text);
     public IEnumerable<string> GetTopMenuItemsText => TopMenuItems.Select(item => item.Text.Trim());

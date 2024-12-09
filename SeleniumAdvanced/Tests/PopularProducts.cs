@@ -21,8 +21,8 @@ public class PopularProducts : TestBase
         // Act
         GetPage<ProductsGridPage>(x =>
         {
-            var popularProductsNames = x.GetProductsNames().ToList();
-            var popularProductsPrices = x.GetProductPricesRegularAndDiscount().ToList();
+            var popularProductsNames = x.GetProductsNames.ToList();
+            var popularProductsPrices = x.GetProductPricesRegularAndDiscount.ToList();
             using (new AssertionScope())
             {
                 popularProductsNames.Should().NotBeEmpty("There should be at least one popular product on the list");

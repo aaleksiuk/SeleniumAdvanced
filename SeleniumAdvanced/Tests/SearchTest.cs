@@ -27,7 +27,7 @@ public class SearchTest : TestBase
         //Assert
         GetPage<ProductsGridPage>(x =>
         {
-            x.GetProductsNames().Should().Contain(searchText);
+            x.GetProductsNames.Should().Contain(searchText);
         });
     }
 }
