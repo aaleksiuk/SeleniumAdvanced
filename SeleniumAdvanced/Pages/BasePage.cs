@@ -10,14 +10,14 @@ public abstract class BasePage
 {
     public IWebDriver Driver { get; }
     public Actions ActionsDriver { get; }
+    public HeaderPage Header => Driver.GetPage<HeaderPage>();
 
     protected BasePage(IWebDriver driver)
     {
         Driver = driver;
         ActionsDriver = new Actions(Driver);
     }
-
-    public void SendKeys(IWebElement element, string text, bool clear = true)
+    public static void SendKeys(IWebElement element, string text, bool clear = true)
     {
         if (clear)
         {
@@ -27,7 +27,6 @@ public abstract class BasePage
         Console.WriteLine($"Typing: {text}");
         element.SendKeys(text);
     }
-
     public void Click(IWebElement element)
     {
         Console.WriteLine($"Clicking: {element.Text}");
@@ -43,7 +42,6 @@ public abstract class BasePage
             throw;
         }
     }
-
     public void Hover(IWebElement element)
     {
         Console.WriteLine($"Hover on: {element.Text}");
@@ -66,7 +64,6 @@ public abstract class BasePage
         Thread.Sleep(500);
         Driver.GetWait().Until(_ => element.Displayed && element.Enabled);
     }
-
     private void MoveToElementAction(IWebElement element)
     {
         ActionsDriver.Reset();

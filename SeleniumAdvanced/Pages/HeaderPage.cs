@@ -1,10 +1,8 @@
 ﻿using OpenQA.Selenium;
-using OpenQA.Selenium.Interactions;
 using SeleniumAdvanced.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Xml.Linq;
 
 namespace SeleniumAdvanced.Pages;
 
@@ -24,15 +22,20 @@ public class HeaderPage(IWebDriver driver) : BasePage(driver)
     private IList<IWebElement> TopMenuSubItems =>
         Driver.WaitAndFindAll(By.CssSelector("#top-menu > li.category li.category")).Where(i => i.Displayed).ToList();
 
+    private IWebElement CategoriesTopMenu => Driver.WaitAndFind(By.CssSelector("div.block-categories > ul"));
+    private IWebElement CategoriesTopMenuName => Driver.WaitAndFind(By.CssSelector("div.block-categories > ul > li:nth-child(1)"));
+    private IWebElement SubCategoriesTopMenuNames => Driver.WaitAndFind(By.CssSelector("div.block-categories > ul > li:nth-child(2)"));
+
     public void SignIn() => Click(SignInBtn);
     public void LogOut() => Click(LogOutBtn);
     public string GetSignedInText => ViewCustomerAccountBtn.Text;
     public void ClickSearchWidget() => Click(SearchWidget);
-    public void SetSearchText(string SearchText) => SendKeys(SearchWidget, SearchText);
+    public void SetSearchText(string searchText) => SendKeys(SearchWidget, searchText);
     public void ClickSearchBtn() => Click(SearchBtn);
     public IEnumerable<string> GetSearchDropdownItemText => SearchDropdown.Select(item => item.Text);
     public IEnumerable<string> GetTopMenuItemsText => TopMenuItems.Select(item => item.Text.Trim());
 
+    public string GetCategoryName => CategoriesTopMenuName.Text;
     public void ClickTopMenuItem(string menuItem) => PerformActionOnMenuItem(TopMenuItems, menuItem, Click);
 
     public void HoverTopMenuItem(string menuItem) => PerformActionOnMenuItem(TopMenuItems, menuItem, Hover);
@@ -43,7 +46,7 @@ public class HeaderPage(IWebDriver driver) : BasePage(driver)
 
     public void ClickTopMenuSubItem(string menuSubItem) => PerformActionOnMenuItem(TopMenuSubItems, menuSubItem, Click);
 
-    private void PerformActionOnMenuItem(IEnumerable<IWebElement> menuItems, string menuItem, Action<IWebElement> action)
+    private static void PerformActionOnMenuItem(IEnumerable<IWebElement> menuItems, string menuItem, Action<IWebElement> action)
     {
         var item = menuItems.FirstOrDefault(i => i.Text.EqualsTrimmedIgnoreCase(menuItem))
             ?? throw new ArgumentException($"Menu item '{menuItem}' not found.", nameof(menuItem));

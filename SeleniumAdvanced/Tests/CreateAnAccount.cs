@@ -14,7 +14,7 @@ public class CreateAnAccount : TestBase
     public void CreateAccount()
     {
         // Arrange
-        var personService = new CreateAccountService(driver);
+        var personService = new CreateAccountService(Driver);
 
         //Assert
         GetPage<HeaderPage>(x =>

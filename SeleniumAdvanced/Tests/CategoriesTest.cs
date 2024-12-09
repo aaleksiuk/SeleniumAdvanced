@@ -17,7 +17,7 @@ public class CategoriesTest : TestBase
     public void Categories()
     {
         // Arrange
-        driver.Navigate().GoToUrl(UrlProvider.AppUrl);
+        Driver.Navigate().GoToUrl(UrlProvider.AppUrl);
 
         // Act
         GetPage((Action<HeaderPage>)(headerPage =>
@@ -33,7 +33,7 @@ public class CategoriesTest : TestBase
                     {
                         ValidateCategoryNameAndFilters(x, menuItem);
                         ValidatePaginationMsg(x);
-                        
+
                     }
                 }));
                 GetPage<HeaderPage>(x =>
@@ -49,7 +49,7 @@ public class CategoriesTest : TestBase
     public void SubCategories()
     {
         // Arrange
-        driver.Navigate().GoToUrl(UrlProvider.AppUrl);
+        Driver.Navigate().GoToUrl(UrlProvider.AppUrl);
 
         // Act
         GetPage<HeaderPage>(x =>
@@ -92,11 +92,12 @@ public class CategoriesTest : TestBase
 
         displayPaginationMessage.Should().MatchRegex(pattern);
     }
+
     private static void ValidateCategoryNameAndFilters(CategoryPage x, string menuItem)
     {
-        var categoryName = x.GetCategoryName;
+        var categoryName = x.Header.GetCategoryName;
 
-        x.GetCategoryName
+        x.Header.GetCategoryName
         .Should()
         .Be(menuItem, $"The clicked menu item/ sub item '{menuItem}' should match the category name '{categoryName}'");
 

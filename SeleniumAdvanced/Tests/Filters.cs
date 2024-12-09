@@ -17,7 +17,7 @@ public class Filters : TestBase
     public void AccessoriesFilters()
     {
         // Arrange
-        driver.Navigate().GoToUrl(UrlProvider.AppUrl);
+        Driver.Navigate().GoToUrl(UrlProvider.AppUrl);
 
         //new filter settings
         const int PRICE_FILTER_TO_MOVE_SLIDER_FROM = 13;
@@ -31,14 +31,9 @@ public class Filters : TestBase
             x.ClickTopMenuItem("Accessories");
         });
 
-        GetPage<ProductsGridPage>(x =>
-        {
-            productsNumber = x.DisplayedProductsNumber;
-        });
-
         GetPage<CategoryPage>(x =>
         {
-
+            productsNumber = x.ProductsGridPage.DisplayedProductsNumber;
             var basePriceFilterSliderFrom = x.BasePriceFilterSliderFrom;
             var basePriceFilterSliderTo = x.BasePriceFilterSliderTo;
 
@@ -57,11 +52,7 @@ public class Filters : TestBase
                 .Should()
                 .Be($"Price: ${PRICE_FILTER_TO_MOVE_SLIDER_FROM}.00 - ${PRICE_FILTER_TO_MOVE_SLIDER_TO}.00");
             }
-        });
-
-        GetPage<ProductsGridPage>(x =>
-        {
-            var productPrices = x.GetProductPrices().ToList();
+            var productPrices = x.ProductsGridPage.GetProductPrices.ToList();
 
             // Assert product prices
             foreach (var price in productPrices)
@@ -71,18 +62,11 @@ public class Filters : TestBase
                 .BeInRange(PRICE_FILTER_TO_MOVE_SLIDER_FROM, PRICE_FILTER_TO_MOVE_SLIDER_TO,
                 $"Because the product price {price} should be within the filter range {PRICE_FILTER_TO_MOVE_SLIDER_FROM} to {PRICE_FILTER_TO_MOVE_SLIDER_TO}");
             }
-        });
-
-        GetPage<CategoryPage>(x =>
-        {
             // Ensure filter is cleared and state is reset
             x.ClearPriceFilter();
             x.WaitForFilterBlockToBeHidden().Should().BeTrue();
-        });
 
-        GetPage<ProductsGridPage>(x =>
-        {
-            x.DisplayedProductsNumber.Should().Be(productsNumber);
+            x.ProductsGridPage.DisplayedProductsNumber.Should().Be(productsNumber);
         });
     }
 }

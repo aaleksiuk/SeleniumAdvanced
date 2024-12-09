@@ -9,31 +9,25 @@ namespace SeleniumAdvanced.Tests;
 [TestFixture]
 public class SearchDropdown : TestBase
 {
-    private readonly string searchText = "HUMMINGBIRD";
+    private readonly string _searchText = "HUMMINGBIRD";
     [Test]
     [Repeat(2)]
     public void SearchText()
     {
         // Arrange
-        driver.Navigate().GoToUrl(UrlProvider.AppUrl);
+        Driver.Navigate().GoToUrl(UrlProvider.AppUrl);
 
         // Act
-        GetPage<HeaderPage>(x =>
-        {
-            x.SetSearchText(searchText);
-        });
+        GetPage<HeaderPage>().SetSearchText(_searchText);
 
         //Assert
-        GetPage<HeaderPage>(x =>
-        {
-            x.GetSearchDropdownItemText.Should().AllSatisfy(ContainsText);
-        });
+        GetPage<HeaderPage>().GetSearchDropdownItemText.Should().AllSatisfy(ContainsText);
     }
     private void ContainsText(string text)
     {
-        if (!text.Contains(searchText))
+        if (!text.Contains(_searchText))
         {
-            throw new System.Exception($"Item \"{text}\" doesn't contain \"{searchText}\" search text");
+            throw new System.Exception($"Item \"{text}\" doesn't contain \"{_searchText}\" search text");
         }
     }
 }

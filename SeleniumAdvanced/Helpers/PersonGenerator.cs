@@ -10,7 +10,7 @@ public class PersonGenerator
         Male,
         Female
     }
-    private readonly Faker personGenerator;
+    private readonly Faker _personGenerator;
 
     public Gender Title { get; }
     public string FirstName { get; }
@@ -22,16 +22,16 @@ public class PersonGenerator
 
     public PersonGenerator()
     {
-        personGenerator = new Faker();
+        _personGenerator = new Faker();
 
         Title = RandomHelper.GetRandomEnum<Gender>();
-        FirstName = personGenerator.Name.FirstName(Title == Gender.Male ? Bogus.DataSets.Name.Gender.Male : Bogus.DataSets.Name.Gender.Female);
-        LastName = personGenerator.Name.LastName(Title == Gender.Male ? Bogus.DataSets.Name.Gender.Male : Bogus.DataSets.Name.Gender.Female);
+        FirstName = _personGenerator.Name.FirstName(Title == Gender.Male ? Bogus.DataSets.Name.Gender.Male : Bogus.DataSets.Name.Gender.Female);
+        LastName = _personGenerator.Name.LastName(Title == Gender.Male ? Bogus.DataSets.Name.Gender.Male : Bogus.DataSets.Name.Gender.Female);
         FullName = FirstName + " " + LastName;
 
         Mail = GenerateMail();
-        Password = personGenerator.Internet.Password(16, false, "", "!@#$%^&*()");
-        BirthDate = personGenerator.Date.Past(80, DateTime.Today.AddYears(-18)).ToString("MM/dd/yyyy"); ;
+        Password = _personGenerator.Internet.Password(16, false, "", "!@#$%^&*()");
+        BirthDate = _personGenerator.Date.Past(80, DateTime.Today.AddYears(-18)).ToString("MM/dd/yyyy"); ;
     }
     private string GenerateMail()
     {

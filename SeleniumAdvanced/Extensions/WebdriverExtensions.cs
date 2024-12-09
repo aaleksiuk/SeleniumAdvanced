@@ -1,5 +1,6 @@
 ﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
+using SeleniumAdvanced.Pages;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,6 +9,13 @@ namespace SeleniumAdvanced.Extensions;
 
 public static class WebDriverExtensions
 {
+    public static T GetPage<T>(this IWebDriver driver, Action<T> action = null) where T : BasePage
+    {
+        var page = (T)Activator.CreateInstance(typeof(T), driver);
+        Console.WriteLine($"At {typeof(T).Name}");
+        action?.Invoke(page);
+        return page;
+    }
     public static WebDriverWait GetWait(this IWebDriver driver, int seconds = 10) => new(driver, TimeSpan.FromSeconds(10));
 
     public static bool IsDisplayed(this IWebDriver driver, By by)
@@ -35,15 +43,18 @@ public static class WebDriverExtensions
     }
     public static IWebElement WaitAndFind(this IWebDriver driver, By by)
     {
-        try
+        return driver.GetWait().Until(d =>
         {
-            return driver.GetWait().Until(d =>
-            d.FindElement(by).Displayed ? d.FindElement(by) : throw new NoSuchElementException($"Element with locator '{by}' was not found"));
-        }
-        catch (NoSuchElementException)
-        {
-            throw new NoSuchElementException($"Element with locator '{by}' was not found within the specified timeout.");
-        }
+            var element = d.FindElement(by);
+            if (element.Displayed)
+            {
+                return element;
+            }
+            else
+            {
+                throw new NoSuchElementException($"Element with locator '{by}' was not found.");
+            }
+        });
     }
 
     public static List<IWebElement> WaitAndFindAll(this IWebDriver driver, By by)
