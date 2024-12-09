@@ -94,14 +94,17 @@
     <Compile Include="Helpers\RandomHelper.cs" />
     <Compile Include="Helpers\TestBase.cs" />
     <Compile Include="Pages\BasePage.cs" />
+    <Compile Include="Pages\BasketPage.cs" />
     <Compile Include="Pages\CategoryPage.cs" />
     <Compile Include="Pages\CreateAccountPage.cs" />
     <Compile Include="Pages\HeaderPage.cs" />
+    <Compile Include="Pages\ProductDetailsPage.cs" />
     <Compile Include="Pages\ProductsGridPage.cs" />
     <Compile Include="Pages\ProductMiniaturePage.cs" />
     <Compile Include="Pages\SignInPage.cs" />
     <Compile Include="Providers\DriverProvider.cs" />
     <Compile Include="Providers\UrlProvider.cs" />
+    <Compile Include="Tests\AddProductsSuccessfullyToShoppingCard.cs" />
     <Compile Include="Tests\CategoriesTest.cs" />
     <Compile Include="Tests\CreateAnAccount.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
