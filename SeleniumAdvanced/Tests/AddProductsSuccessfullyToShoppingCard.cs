@@ -1,18 +1,18 @@
 ﻿using FluentAssertions;
+using FluentAssertions.Execution;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
 using SeleniumAdvanced.Helpers;
 using SeleniumAdvanced.Pages;
 using SeleniumAdvanced.Providers;
-using System.Web.UI.WebControls;
 
 namespace SeleniumAdvanced.Tests;
 
 [TestFixture]
 public class AddToBasket : TestBase
 {
-    private int quantity = 3;
-    private string productName = "THE BEST IS YET POSTER";
+    private readonly int quantity = 3;
+    private readonly string productName = "THE BEST IS YET POSTER";
     [Test]
     [Repeat(1)]
     public void AddSuccessfullyToBasket()
@@ -23,7 +23,6 @@ public class AddToBasket : TestBase
         // Act
         GetPage<HeaderPage>(x => x.ClickTopMenuItem("ART"));
 
-        //Assert
         GetPage<ProductsGridPage>(x =>
         {
             x.ClickProductByName(productName);
@@ -35,18 +34,26 @@ public class AddToBasket : TestBase
             x.ClickAddToBasketBtn();
         });
 
+        //Assert
         GetPage<ProductDetailsPage>(x =>
         {
-            x.ModalProductName.Should().Be(productName);
-            x.ModalPrice.Should().Be(x.ProductPrice);
-            x.ModalQuantity.Should().Be(quantity);
-            x.ModalTotalItemsText.Should().Be($"({quantity})");
-            decimal subTotal = x.Subtotal(quantity, x.ModalPrice);
-            x.ModalSubtotal.Should().Be(subTotal);
+            using (new AssertionScope())
+            {
+                x.ModalProductName.Should().Be(productName);
+                x.ModalPrice.Should().Be(x.ProductPrice);
+                x.ModalQuantity.Should().Be(quantity);
+                x.ModalTotalItemsText.Should().Be($"({quantity})");
+
+                var subTotal = x.CalculateSubtotal(quantity, x.ModalPrice);
+                x.ModalSubtotal.Should().Be(subTotal);
+
+                x.ClickContinueModalBtn();
+            }
+        });
+
+        GetPage<HeaderPage>(x =>
+        {
+            x.CartProductCount.Should().Be($"({quantity})");
         });
     }
 }
-
-//-	check if popup has correct name, price, quantity, there are X items in your cart, Total products value
-//-	click continue shopping
-//-	check if cart icon has update quantity of products – Cart(X)

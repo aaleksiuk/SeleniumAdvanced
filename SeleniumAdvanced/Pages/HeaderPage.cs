@@ -12,6 +12,7 @@ public class HeaderPage(IWebDriver driver) : BasePage(driver)
     private IWebElement LogOutBtn => Driver.WaitAndFind(By.CssSelector("a.logout"));
     private IWebElement ViewCustomerAccountBtn => Driver.WaitAndFind(By.CssSelector("span.hidden-sm-down"));
     private IWebElement ContactUsBtn => Driver.WaitAndFind(By.CssSelector("#contact-link"));
+    public string CartProductCount => Driver.WaitAndFind(By.CssSelector(".cart-products-count")).Text;
 
     private IWebElement SearchWidget => Driver.WaitAndFind(By.CssSelector(".search-widget input[name='s']"));
     private IWebElement SearchBtn => Driver.WaitAndFind(By.CssSelector("#search_widget > form > button"));

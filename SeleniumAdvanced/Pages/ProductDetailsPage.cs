@@ -14,25 +14,22 @@ public class ProductDetailsPage(IWebDriver driver) : BasePage(driver)
     public decimal ModalPrice => Driver.WaitAndFind(By.CssSelector(".product-price")).GetPrice();
     public int ModalQuantity => int.Parse(Driver.WaitAndFind(By.CssSelector(".product-quantity strong")).Text);
     public string ModalTotalItemsText => Driver.WaitAndFind(By.CssSelector(".cart-products-count")).Text;
-    public decimal ModalSubtotal => Driver.WaitAndFind(By.CssSelector(".subtotal value")).GetPrice();
+    public decimal ModalSubtotal => Driver.WaitAndFind(By.CssSelector(".subtotal.value")).GetPrice();
 
     private IWebElement ModalCloseBtn => Driver.WaitAndFind(By.CssSelector(".close"));
-
-
+    private IWebElement ModalContinueBtn => Driver.WaitAndFind(By.CssSelector(".btn-secondary"));
+    private IWebElement ModalProceedToCheckoutBtn => Driver.WaitAndFind(By.CssSelector(".btn-primary"));
     public void IncreaseQuantity(int quantity)
     {
-        var howManyTimesToClick = quantity - 1;
-        while (howManyTimesToClick > 0)
+        for (var i = 1; i < quantity; i++)
         {
             UpQuantityBtn.Click();
-            howManyTimesToClick--;
         }
     }
     public void ClickAddToBasketBtn() => Click(AddToBasketBtn);
-    public void ClickCloseModalBtn() => Click(AddToBasketBtn);
+    public void ClickCloseModalBtn() => Click(ModalCloseBtn);
+    public void ClickContinueModalBtn() => Click(ModalContinueBtn);
+    public void ClickProceedToCheckoutModalBtn() => Click(ModalProceedToCheckoutBtn);
 
-    public decimal Subtotal(int quantity, decimal ProductPrice)
-    {
-        return quantity * ProductPrice;
-    }
+    public decimal CalculateSubtotal(int quantity, decimal ProductPrice) => quantity * ProductPrice;
 }
