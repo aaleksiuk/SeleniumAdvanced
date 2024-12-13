@@ -6,5 +6,7 @@ namespace SeleniumAdvanced.Extensions
     {
         public static bool EqualsTrimmedIgnoreCase(this string source, string target) =>
             source.Trim().Equals(target, StringComparison.InvariantCultureIgnoreCase);
+
+        
     }
 }

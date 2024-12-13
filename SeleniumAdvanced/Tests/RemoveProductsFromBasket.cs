@@ -11,7 +11,7 @@ namespace SeleniumAdvanced.Tests;
 [TestFixture]
 public class RemoveProductsFromBasket : TestBase
 {
-    private decimal subTotal = 0;
+    private decimal currentSubTotal = 0;
     private decimal subTotalFirstProduct = 0;
     private int basketQuantity = 0;
     private readonly List<string> _selectedProducts = [];
@@ -25,17 +25,17 @@ public class RemoveProductsFromBasket : TestBase
 
         // Act & Validate
         AddProductAndValidate(1);
-        subTotalFirstProduct = subTotal;
+        subTotalFirstProduct = currentSubTotal;
 
         GetPage<HeaderPage>(x => x.ClickLogoImage());
 
         AddProductAndValidate(1);
 
-        // Assert
-        RemoveProductAndValidate(expectedQuantity: 1, expectedSubtotal: subTotal - subTotalFirstProduct);
+        // Remove products and validate
+        RemoveProductAndValidate(expectedQuantity: 1, expectedSubtotal: currentSubTotal - subTotalFirstProduct);
         RemoveProductAndValidate(expectedQuantity: 0, expectedSubtotal: 0);
 
-        ValidateCartCount(expectedCount: 0);
+        ValidateCartItemCount(expectedCount: 0);
     }
 
     private void AddProductAndValidate(int quantity)
@@ -57,7 +57,7 @@ public class RemoveProductsFromBasket : TestBase
         GetPage<ProductDetailsPage>(page =>
         {
             page.ClickAddToBasketBtn();
-            subTotal += page.CalculateSubtotal(quantity, page.ModalPrice);
+            currentSubTotal += page.CalculateSubtotal(quantity, page.ModalPrice);
             page.ClickContinueModalBtn();
         });
     }
@@ -70,7 +70,7 @@ public class RemoveProductsFromBasket : TestBase
         {
             using (new AssertionScope())
             {
-                page.Subtotal.Should().Be(subTotal);
+                page.Subtotal.Should().Be(currentSubTotal);
                 page.SubtotalProducts.Should().Be($"{basketQuantity} {GetExpectedItemsMessage(basketQuantity)}");
             }
         });
@@ -93,7 +93,7 @@ public class RemoveProductsFromBasket : TestBase
         });
     }
 
-    private void ValidateCartCount(int expectedCount)
+    private void ValidateCartItemCount(int expectedCount)
     {
         GetPage<HeaderPage>(page =>
         {
@@ -101,7 +101,7 @@ public class RemoveProductsFromBasket : TestBase
         });
     }
 
-    private static string GetExpectedItemsMessage(int quantity)
+    public static string GetExpectedItemsMessage(int quantity)
     {
         return quantity == 1 ? "item" : "items";
     }
