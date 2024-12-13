@@ -14,10 +14,13 @@ public class HeaderPage(IWebDriver driver) : BasePage(driver)
     private IWebElement ContactUsBtn => Driver.WaitAndFind(By.CssSelector("#contact-link"));
     public string CartProductCount => Driver.WaitAndFind(By.CssSelector(".cart-products-count")).Text;
 
+    private IWebElement CartBtn => Driver.WaitAndFind(By.CssSelector("div.blockcart.cart-preview.active"));
+
     private IWebElement SearchWidget => Driver.WaitAndFind(By.CssSelector(".search-widget input[name='s']"));
     private IWebElement SearchBtn => Driver.WaitAndFind(By.CssSelector("#search_widget > form > button"));
     private IList<IWebElement> SearchDropdown => Driver.WaitAndFindAll(By.CssSelector("#ui-id-1 li"));
 
+    private IWebElement LogoImage => Driver.WaitAndFind(By.CssSelector("#_desktop_logo img"));
     private IList<IWebElement> TopMenu => Driver.WaitAndFindAll(By.CssSelector(".top-menu"));
     private IList<IWebElement> TopMenuItems => Driver.WaitAndFindAll(By.CssSelector("#top-menu > li.category"));
     private IList<IWebElement> TopMenuSubItems =>
@@ -27,12 +30,14 @@ public class HeaderPage(IWebDriver driver) : BasePage(driver)
     private IWebElement CategoriesTopMenuName => Driver.WaitAndFind(By.CssSelector("div.block-categories > ul > li:nth-child(1)"));
     private IWebElement SubCategoriesTopMenuNames => Driver.WaitAndFind(By.CssSelector("div.block-categories > ul > li:nth-child(2)"));
 
+    public void ClickLogoImage() => Click(LogoImage);
     public void SignIn() => Click(SignInBtn);
     public void LogOut() => Click(LogOutBtn);
     public string GetSignedInText => ViewCustomerAccountBtn.Text;
     public void ClickSearchWidget() => Click(SearchWidget);
     public void SetSearchText(string searchText) => SendKeys(SearchWidget, searchText);
     public void ClickSearchBtn() => Click(SearchBtn);
+    public void ClickCartBtn() => Click(CartBtn);
     public IEnumerable<string> GetSearchDropdownItemText => SearchDropdown.Select(item => item.Text);
     public IEnumerable<string> GetTopMenuItemsText => TopMenuItems.Select(item => item.Text.Trim());
 

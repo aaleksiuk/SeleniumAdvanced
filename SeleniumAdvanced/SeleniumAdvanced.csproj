@@ -86,6 +86,8 @@
     <Compile Include="Enums\Browsers.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Extensions\WebElementExtensions.cs" />
+    <Compile Include="Helpers\Basket.cs" />
+    <Compile Include="Helpers\BasketHelper.cs" />
     <Compile Include="Helpers\Configuration.cs" />
     <Compile Include="Helpers\ConfigurationModel.cs" />
     <Compile Include="Helpers\CreateAccountHelper.cs" />
@@ -111,6 +113,7 @@
     <Compile Include="Tests\Filters.cs" />
     <Compile Include="Tests\LogAsAUser.cs" />
     <Compile Include="Tests\PopularProducts.cs" />
+    <Compile Include="Tests\RemoveProductsFromBasket.cs" />
     <Compile Include="Tests\SearchDropdown.cs" />
     <Compile Include="Tests\SearchTest.cs" />
   </ItemGroup>

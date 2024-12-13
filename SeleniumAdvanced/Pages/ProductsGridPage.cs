@@ -19,7 +19,7 @@ public class ProductsGridPage(IWebDriver driver) : BasePage(driver)
     public IEnumerable<decimal> GetProductPrices => ProductsMiniatures.Select(item => item.Price);
     public IEnumerable<decimal> GetProductPricesRegularAndDiscount => ProductsMiniatures.Select(item => item.DiscountPrice);
 
-    public void ClickProductByName (string productName)
+    public void ClickProductByName(string productName)
     {
         var product = ProductsMiniatures.FirstOrDefault(item =>
             item.NameText.Equals(productName, StringComparison.OrdinalIgnoreCase));
@@ -31,5 +31,21 @@ public class ProductsGridPage(IWebDriver driver) : BasePage(driver)
         {
             throw new NoSuchElementException($"Product with name '{productName}' not found.");
         }
+    }
+    public string SelectRandomProductExcludingSelectedBefore(IEnumerable<string> excludedProducts)
+    {
+        var availableProducts = ProductsMiniatures
+       .Select(item => item.NameText)
+       .Except(excludedProducts)
+       .ToList();
+
+        if (availableProducts.Count == 0)
+        {
+            throw new InvalidOperationException("No more unique products available to select.");
+        }
+
+        var rand = new Random();
+        var randomIndex = rand.Next(availableProducts.Count);
+        return availableProducts[randomIndex];
     }
 }
