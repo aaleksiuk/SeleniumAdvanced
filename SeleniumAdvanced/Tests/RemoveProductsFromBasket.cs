@@ -14,7 +14,7 @@ public class RemoveProductsFromBasket : TestBase
     private decimal subTotal = 0;
     private decimal subTotalFirstProduct = 0;
     private int basketQuantity = 0;
-    private readonly List<string> selectedProducts = [];
+    private readonly List<string> _selectedProducts = [];
 
     [Test]
     [Repeat(1)]
@@ -23,31 +23,35 @@ public class RemoveProductsFromBasket : TestBase
         // Arrange
         Driver.Navigate().GoToUrl(UrlProvider.AppUrl);
 
-        // Act
-        AddRandomProductToBasket();
+        // Act & Validate
+        AddProductAndValidate(1);
         subTotalFirstProduct = subTotal;
-        basketQuantity++;
-        ValidateBasketAfterAddingProducts(basketQuantity);
 
         GetPage<HeaderPage>(x => x.ClickLogoImage());
-        AddRandomProductToBasket();
-        basketQuantity++;
-        ValidateBasketAfterAddingProducts(basketQuantity);
+
+        AddProductAndValidate(1);
 
         // Assert
-        RemoveProductAndValidate(remainingItems: "1 item", expectedSubtotal: subTotal - subTotalFirstProduct);
-        RemoveProductAndValidate(remainingItems: "0 items", expectedSubtotal: 0);
+        RemoveProductAndValidate(expectedQuantity: 1, expectedSubtotal: subTotal - subTotalFirstProduct);
+        RemoveProductAndValidate(expectedQuantity: 0, expectedSubtotal: 0);
 
-        GetPage<HeaderPage>(x => x.CartProductCount.Should().Be("(0)"));
+        ValidateCartCount(expectedCount: 0);
     }
 
-    private void AddRandomProductToBasket(int quantity = 1)
+    private void AddProductAndValidate(int quantity)
     {
-        GetPage<ProductsGridPage>(x =>
+        AddRandomProductToBasket(quantity);
+        basketQuantity += quantity;
+        ValidateBasket(basketQuantity);
+    }
+
+    private void AddRandomProductToBasket(int quantity)
+    {
+        GetPage<ProductsGridPage>(page =>
         {
-            var product = x.SelectRandomProductExcludingSelectedBefore(selectedProducts);
-            x.ClickProductByName(product);
-            selectedProducts.Add(product);
+            var product = page.SelectRandomProductExcludingSelectedBefore(_selectedProducts);
+            page.ClickProductByName(product);
+            _selectedProducts.Add(product);
         });
 
         GetPage<ProductDetailsPage>(page =>
@@ -58,7 +62,7 @@ public class RemoveProductsFromBasket : TestBase
         });
     }
 
-    private void ValidateBasketAfterAddingProducts(int basketQuantity)
+    private void ValidateBasket(int basketQuantity)
     {
         GetPage<HeaderPage>(page => page.ClickCartBtn());
 
@@ -71,7 +75,8 @@ public class RemoveProductsFromBasket : TestBase
             }
         });
     }
-    private void RemoveProductAndValidate(string remainingItems, decimal expectedSubtotal)
+
+    private void RemoveProductAndValidate(int expectedQuantity, decimal expectedSubtotal)
     {
         GetPage<BasketPage>(page =>
         {
@@ -80,13 +85,23 @@ public class RemoveProductsFromBasket : TestBase
             {
                 using (new AssertionScope())
                 {
-                    page.SubtotalProducts.Should().Be(remainingItems);
+                    page.SubtotalProducts.Should().Be($"{expectedQuantity} {GetExpectedItemsMessage(expectedQuantity)}");
                     page.Subtotal.Should().Be(expectedSubtotal);
                 }
+                basketQuantity--;
             }
         });
     }
-    private string GetExpectedItemsMessage(int quantity)
+
+    private void ValidateCartCount(int expectedCount)
+    {
+        GetPage<HeaderPage>(page =>
+        {
+            page.CartProductCount.Should().Be($"({expectedCount})");
+        });
+    }
+
+    private static string GetExpectedItemsMessage(int quantity)
     {
         return quantity == 1 ? "item" : "items";
     }
