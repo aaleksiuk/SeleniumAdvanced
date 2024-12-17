@@ -1,15 +1,13 @@
-﻿using SeleniumAdvanced.Tests;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace SeleniumAdvanced.Helpers;
 
-namespace SeleniumAdvanced.Helpers;
-
-public class Basket
+public class Basket(string name, int quantity, decimal price)
 {
-    public string Name { get; }
-    public int Quantity { get; }
-    public decimal Price { get; }
+    public string Name { get; } = name;
+    public int Quantity { get; private set; } = quantity;
+    public decimal Price { get; } = price;
+
+    public void IncreaseQuantity(int quantity)
+    {
+        Quantity += quantity;
+    }
 }

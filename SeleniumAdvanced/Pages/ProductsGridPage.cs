@@ -48,4 +48,20 @@ public class ProductsGridPage(IWebDriver driver) : BasePage(driver)
         var randomIndex = rand.Next(availableProducts.Count);
         return availableProducts[randomIndex];
     }
+
+    public string SelectRandomProduct()
+    {
+        var availableProducts = ProductsMiniatures
+       .Select(item => item.NameText)
+       .ToList();
+
+        if (availableProducts.Count == 0)
+        {
+            throw new InvalidOperationException("No products available to select.");
+        }
+
+        var rand = new Random();
+        var randomIndex = rand.Next(availableProducts.Count);
+        return availableProducts[randomIndex];
+    }
 }

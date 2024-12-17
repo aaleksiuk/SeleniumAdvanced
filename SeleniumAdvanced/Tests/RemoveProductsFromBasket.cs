@@ -4,6 +4,7 @@ using NUnit.Framework;
 using SeleniumAdvanced.Helpers;
 using SeleniumAdvanced.Pages;
 using SeleniumAdvanced.Providers;
+using System;
 using System.Collections.Generic;
 
 namespace SeleniumAdvanced.Tests;
@@ -17,7 +18,7 @@ public class RemoveProductsFromBasket : TestBase
     private readonly List<string> _selectedProducts = [];
 
     [Test]
-    [Repeat(1)]
+    [Repeat(2)]
     public void RemoveProducts()
     {
         // Arrange
@@ -70,6 +71,7 @@ public class RemoveProductsFromBasket : TestBase
         {
             using (new AssertionScope())
             {
+                
                 page.Subtotal.Should().Be(currentSubTotal);
                 page.SubtotalProducts.Should().Be($"{basketQuantity} {GetExpectedItemsMessage(basketQuantity)}");
             }

@@ -1,4 +1,5 @@
 ﻿using OpenQA.Selenium;
+using System;
 
 namespace SeleniumAdvanced.Extensions;
 
@@ -12,7 +13,7 @@ public static class WebElementExtensions
     }
     private static string RemoveCurrencySymbols(string priceText)
     {
-        return priceText.Replace("$", "").Trim();
+        return priceText.TrimStart('$').Split(' ')[0]; // to get prices like $28.72 SAVE 20%
     }
 
     private static decimal TextToDecimal(string elementText)

@@ -106,6 +106,7 @@
     <Compile Include="Providers\DriverProvider.cs" />
     <Compile Include="Providers\UrlProvider.cs" />
     <Compile Include="Tests\AddProductsSuccessfullyToShoppingCard.cs" />
+    <Compile Include="Tests\BasketGeneric.cs" />
     <Compile Include="Tests\CategoriesTest.cs" />
     <Compile Include="Tests\CreateAnAccount.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
