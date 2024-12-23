@@ -14,7 +14,7 @@ public class AddToBasket : TestBase
     private readonly int quantity = 3;
     private readonly string productName = "THE BEST IS YET POSTER";
     [Test]
-    [Repeat(1)]
+    [Repeat(10)]
     public void AddSuccessfullyToBasket()
     {
         // Arrange

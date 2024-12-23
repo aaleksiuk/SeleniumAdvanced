@@ -4,7 +4,6 @@ using NUnit.Framework;
 using SeleniumAdvanced.Helpers;
 using SeleniumAdvanced.Pages;
 using SeleniumAdvanced.Providers;
-using System;
 using System.Collections.Generic;
 
 namespace SeleniumAdvanced.Tests;
@@ -12,19 +11,22 @@ namespace SeleniumAdvanced.Tests;
 [TestFixture]
 public class RemoveProductsFromBasket : TestBase
 {
-    private decimal currentSubTotal = 0;
+    private decimal currentSubTotal;
     private decimal subTotalFirstProduct = 0;
     private int basketQuantity = 0;
     private readonly List<string> _selectedProducts = [];
 
     [Test]
-    [Repeat(2)]
+    [Repeat(10)]
     public void RemoveProducts()
     {
         // Arrange
         Driver.Navigate().GoToUrl(UrlProvider.AppUrl);
 
         // Act & Validate
+        currentSubTotal = 0;
+        _selectedProducts.Clear();
+
         AddProductAndValidate(1);
         subTotalFirstProduct = currentSubTotal;
 
@@ -71,7 +73,7 @@ public class RemoveProductsFromBasket : TestBase
         {
             using (new AssertionScope())
             {
-                
+
                 page.Subtotal.Should().Be(currentSubTotal);
                 page.SubtotalProducts.Should().Be($"{basketQuantity} {GetExpectedItemsMessage(basketQuantity)}");
             }

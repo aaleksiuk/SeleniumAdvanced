@@ -16,11 +16,12 @@ public class BasketGeneric : TestBase
     private decimal totalFromModal;
 
     [Test]
-    [Repeat(1)]
+    [Repeat(10)]
     public void AddRandomProducts()
     {
         // Arrange
         Driver.Navigate().GoToUrl(UrlProvider.AppUrl);
+        addedBasketItems.Clear();
 
         // Act & Validate
         for (var i = 0; i < productsNumbers; i++)
