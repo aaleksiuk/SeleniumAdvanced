@@ -13,6 +13,7 @@ public class AddToBasket : TestBase
 {
     private readonly int quantity = 3;
     private readonly string productName = "THE BEST IS YET POSTER";
+
     [Test]
     [Repeat(10)]
     public void AddSuccessfullyToBasket()
@@ -34,7 +35,7 @@ public class AddToBasket : TestBase
             x.ClickAddToBasketBtn();
         });
 
-        //Assert
+        // Assert
         GetPage<ProductDetailsPage>(x =>
         {
             using (new AssertionScope())
@@ -44,7 +45,7 @@ public class AddToBasket : TestBase
                 x.ModalQuantity.Should().Be(quantity);
                 x.ModalTotalItemsText.Should().Be($"({quantity})");
 
-                var subTotal = x.CalculateSubtotal(quantity, x.ModalPrice);
+                var subTotal = x.CalculateSubtotal(quantity, x.ProductPrice);
                 x.ModalSubtotal.Should().Be(subTotal);
 
                 x.ClickContinueModalBtn();

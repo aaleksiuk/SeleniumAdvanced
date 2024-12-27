@@ -39,7 +39,6 @@ public static class WebDriverExtensions
         {
             return false;
         }
-
     }
     public static IWebElement WaitAndFind(this IWebDriver driver, By by)
     {
@@ -88,19 +87,19 @@ public static class WebDriverExtensions
             throw new NoSuchElementException($"Element with locator '{by}' was not found within the specified timeout.");
         }
     }
-    public static bool WaitForValueChange(this IWebDriver driver, By by, string initialValue, int seconds = 3)
+    public static bool WaitForValueToBe(this IWebDriver driver, By by, string expectedValue, int seconds = 3)
     {
         try
         {
             return driver.GetWait(seconds).Until(_ =>
             {
                 var currentValue = driver.FindElement(by).Text;
-                return currentValue != initialValue;
+                return currentValue == expectedValue;
             });
         }
         catch (WebDriverTimeoutException)
         {
-            throw new Exception($"Element with locator '{by}' was not changed within specified timeout.");
+            return false;
         }
     }
 }

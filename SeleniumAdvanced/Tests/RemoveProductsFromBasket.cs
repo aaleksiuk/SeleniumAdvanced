@@ -85,15 +85,14 @@ public class RemoveProductsFromBasket : TestBase
         GetPage<BasketPage>(page =>
         {
             page.ClickFirstProductDeleteButton();
-            if (page.HasChanged)
+            page.WaitUntilSubtotalIs($"{expectedQuantity} {GetExpectedItemsMessage(expectedQuantity)}");
+
+            using (new AssertionScope())
             {
-                using (new AssertionScope())
-                {
-                    page.SubtotalProducts.Should().Be($"{expectedQuantity} {GetExpectedItemsMessage(expectedQuantity)}");
-                    page.Subtotal.Should().Be(expectedSubtotal);
-                }
-                basketQuantity--;
+                page.SubtotalProducts.Should().Be($"{expectedQuantity} {GetExpectedItemsMessage(expectedQuantity)}");
+                page.Subtotal.Should().Be(expectedSubtotal);
             }
+            basketQuantity--;
         });
     }
 

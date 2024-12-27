@@ -23,8 +23,8 @@ public class BasketPage(IWebDriver driver) : BasePage(driver)
     public void ClickFirstProductDeleteButton() => Click(FirstProductDeleteButton);
     public void ClickLastProductDeleteButton() => Click(LastProductDeleteButton);
 
-    public bool HasChanged => Driver.WaitForValueChange
-        (By.CssSelector("#cart-subtotal-products .label.js-subtotal"), SubtotalProducts);
+    public bool WaitUntilSubtotalIs(string expected) => Driver.WaitForValueToBe
+        (By.CssSelector("#cart-subtotal-products .label.js-subtotal"), expected);
 
     public List<Basket> GetProductsListFromBasket()
     {

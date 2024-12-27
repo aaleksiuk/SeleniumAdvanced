@@ -28,36 +28,23 @@ public class BasketGeneric : TestBase
         {
             string productName = null;
             decimal productPrice = 0;
-            var productQuantity = 0;
 
             GetPage<ProductsGridPage>(x =>
             {
-                var product = x.SelectRandomProduct();
-                productName = product;
-                x.ClickProductByName(product);
-
+                productName = x.SelectRandomProduct();
+                x.ClickProductByName(productName);
             });
 
             GetPage<ProductDetailsPage>(x =>
             {
-                var rand = new Random();
-                var quantity = rand.Next(minQuantity, maxQuantity);
-                x.IncreaseQuantity(quantity);
-                productQuantity = quantity;
                 productPrice = x.ProductPrice;
+                var newBasketItem = Basket.CreateBasketItem(productName, productPrice, minQuantity, maxQuantity);
+                x.IncreaseQuantity(newBasketItem.Quantity);
                 x.ClickAddToBasketBtn();
 
-                Console.WriteLine($"Added to basket: {productName} {productQuantity} {productPrice}");
+                Console.WriteLine($"Added to basket: {productName} {newBasketItem.Quantity} {productPrice}");
 
-                var existingItem = addedBasketItems.Find(item => item.Name == productName);
-                if (existingItem != null)
-                {
-                    existingItem.IncreaseQuantity(productQuantity);
-                }
-                else
-                {
-                    addedBasketItems.Add(new Basket(productName, productQuantity, productPrice));
-                }
+                Basket.AddOrUpdateBasketItem(addedBasketItems, newBasketItem);
                 totalFromModal = x.ModalSubtotal;
                 x.ClickContinueModalBtn();
             });
@@ -67,7 +54,7 @@ public class BasketGeneric : TestBase
         GetPage<HeaderPage>(x => x.ClickCartBtn());
         GetPage<BasketPage>(x =>
         {
-            addedBasketItems.Should().BeEquivalentTo(x.GetProductsListFromBasket());
+            x.GetProductsListFromBasket().Should().BeEquivalentTo(addedBasketItems);
             x.Subtotal.Should().Be(totalFromModal);
         });
     }
