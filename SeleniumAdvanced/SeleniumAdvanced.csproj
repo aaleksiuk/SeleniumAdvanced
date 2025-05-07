@@ -86,7 +86,7 @@
     <Compile Include="Enums\Browsers.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Extensions\WebElementExtensions.cs" />
-    <Compile Include="Helpers\Basket.cs" />
+    <Compile Include="Helpers\BasketItem.cs" />
     <Compile Include="Helpers\Configuration.cs" />
     <Compile Include="Helpers\ConfigurationModel.cs" />
     <Compile Include="Helpers\CreateAccountHelper.cs" />

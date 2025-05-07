@@ -26,17 +26,22 @@ public class BasketPage(IWebDriver driver) : BasePage(driver)
     public bool WaitUntilSubtotalIs(string expected) => Driver.WaitForValueToBe
         (By.CssSelector("#cart-subtotal-products .label.js-subtotal"), expected);
 
-    public List<Basket> GetProductsListFromBasket()
+    public List<BasketItem> GetProductsListFromBasket()
     {
-        var actualBasketItems = new List<Basket>();
+        var actualBasketItems = new List<BasketItem>();
 
         foreach (var row in BasketItems)
         {
             string name = row.FindElement(By.CssSelector("a.label")).Text;
             int quantity = int.Parse(row.FindElement(By.CssSelector("input.js-cart-line-product-quantity")).GetDomAttribute("value"));
             decimal price = row.FindElement(By.CssSelector("div.current-price span.price")).GetPrice();
-            actualBasketItems.Add(new Basket(name, quantity, price));
+            actualBasketItems.Add(new BasketItem(name, quantity, price));
         }
         return actualBasketItems;
+    }
+
+    public Basket GetBasket()
+    {
+        return new Basket(GetProductsListFromBasket(), Subtotal);
     }
 }

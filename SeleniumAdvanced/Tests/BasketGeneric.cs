@@ -5,15 +5,15 @@ using SeleniumAdvanced.Pages;
 using SeleniumAdvanced.Providers;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 namespace SeleniumAdvanced.Tests;
 public class BasketGeneric : TestBase
 {
-    private readonly List<Basket> addedBasketItems = [];
+    private readonly List<BasketItem> addedBasketItems = [];
 
     private readonly int productsNumbers = 10;
     private readonly int minQuantity = 1;
     private readonly int maxQuantity = 5;
-    private decimal totalFromModal;
 
     [Test]
     [Repeat(10)]
@@ -22,6 +22,8 @@ public class BasketGeneric : TestBase
         // Arrange
         Driver.Navigate().GoToUrl(UrlProvider.AppUrl);
         addedBasketItems.Clear();
+
+        decimal totalBasketAmount = 0;
 
         // Act & Validate
         for (var i = 0; i < productsNumbers; i++)
@@ -38,24 +40,23 @@ public class BasketGeneric : TestBase
             GetPage<ProductDetailsPage>(x =>
             {
                 productPrice = x.ProductPrice;
-                var newBasketItem = Basket.CreateBasketItem(productName, productPrice, minQuantity, maxQuantity);
+                var newBasketItem = BasketItem.CreateBasketItem(productName, productPrice, minQuantity, maxQuantity);
                 x.IncreaseQuantity(newBasketItem.Quantity);
                 x.ClickAddToBasketBtn();
 
-                Console.WriteLine($"Added to basket: {productName} {newBasketItem.Quantity} {productPrice}");
+                Console.WriteLine($"Added to basket: {productName}, quantity:{newBasketItem.Quantity}, price:{productPrice}, total basket amount: {totalBasketAmount}");
 
-                Basket.AddOrUpdateBasketItem(addedBasketItems, newBasketItem);
-                totalFromModal = x.ModalSubtotal;
+                BasketItem.AddOrUpdateBasketItem(addedBasketItems, newBasketItem);
+                totalBasketAmount = addedBasketItems.Sum(item=>item.TotalAmount);
+
                 x.ClickContinueModalBtn();
             });
 
             GetPage<HeaderPage>(x => x.ClickLogoImage());
         }
         GetPage<HeaderPage>(x => x.ClickCartBtn());
-        GetPage<BasketPage>(x =>
-        {
-            x.GetProductsListFromBasket().Should().BeEquivalentTo(addedBasketItems);
-            x.Subtotal.Should().Be(totalFromModal);
-        });
+
+        var expectedBasket = new Basket(addedBasketItems, totalBasketAmount);
+        GetPage<BasketPage>().GetBasket().Should().BeEquivalentTo(expectedBasket);
     }
 }
